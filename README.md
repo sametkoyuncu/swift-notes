@@ -1,8 +1,8 @@
-# swift-notes
+# 📔 Swift Notes
 
 My Swift journey..
 
-## List of Contents
+### 📘 List of Contents
 
 - Swift Book Notes -> [swiftBook.swift](https://github.com/sametkoyuncu/swift-notes/blob/master/swiftBook.swift)
 - How to create constants file? -> [Constants.swift](https://github.com/sametkoyuncu/swift-notes/blob/master/Constants.swift)
