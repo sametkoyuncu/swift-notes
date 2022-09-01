@@ -21,3 +21,5 @@ print(userSettings_Two.username) // ohaok
 /*
     Adding a private initializer is important, because it stops other parts of our code from trying to create a Settings class instance. However, the class creates its own instance of itself as a static variable, which means the only instance of the Settings class is the one it created: Settings.shared.
 */
+
+//* source: hacking with swift
