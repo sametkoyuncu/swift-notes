@@ -58,3 +58,36 @@ var doubleValue = Double(intValue)
     // You can use the element names like this below
     print(http200Ok.statusCode)
     // ! Note: They (tuples) are not suited to the creation of complex data scructures.
+
+//* Optionals
+// You use optionals in situations where a value may be absent.
+var serverResponseCode: Int? = 404
+serverResponseCode = nil // contains no value
+var serverAnswer: String? // automatically set to nil
+
+// if statemets and forced unwrapping
+if serverResponseCode != nil {
+    print("Status Code: \(serverResponseCode)")
+}
+
+// optional binding
+if let actualNumber = Int(possibleNumber) {
+    print("The string \"\(possibleNumber)\" has an integer value of \(actualNumber)")
+} else {
+    print("The string \"\(possibleNumber)\" couldn't be converted to an integer")
+}
+
+// implicitly unwrapped optionals -> String!
+let possibleString: String? = "An optional string."
+let forcedString: String = possibleString! // requires an exclamation point
+
+let assumedString: String! = "An implicitly unwrapped optional string."
+let implicitString: String = assumedString // no need for an exclamation point
+
+// Error Handling
+// Assertions and Preconditions
+    // DEbugging with asertion
+    assert(age >= 0, "A person's age can't be less than zero.")
+    // Enforcing Preconditions
+    precondition(index > 0, "Index must be greater than zero.")
+    // Note: f you compile in unchecked mode (-Ounchecked), preconditions aren’t checked. 
