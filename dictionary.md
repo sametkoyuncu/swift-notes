@@ -14,10 +14,12 @@
 
 - compound: birleştirmek, bileşik, karışık
 - concise: özlü
+- confident: kendinden emin
 
 # D
 
 - deduce: Sonuç çıkarmak, anlamak.
+- despite: aksine
 - distinct: belirgin, farklı, ayrı
 
 # E
@@ -53,6 +55,10 @@
 - presence: mevcut, varlık
 - propagate: yaymak
 - provide: sağlamak
+
+# R
+
+- regardless: ne olursa olsun
 
 # S
 

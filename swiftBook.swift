@@ -91,3 +91,63 @@ let implicitString: String = assumedString // no need for an exclamation point
     // Enforcing Preconditions
     precondition(index > 0, "Index must be greater than zero.")
     // Note: f you compile in unchecked mode (-Ounchecked), preconditions aren’t checked. 
+
+/*
+    ? Basic Operators
+*/
+
+//* +, -, *, /, %
+//* Swift also provides range operators:
+    // [1...5] -> 1, 2, 3, 4, 5   (closed range op.)
+    // [1..<5] -> 1, 2, 3, 4      (half open range op.)
+    // [2...] | [...2] | [..<2]   (one sided ranges)
+        // for name in names[..2] etc.
+//* ternary operator
+    // a ? b : c
+//* &+ -> overflow operator
+//* Nil-Coalescing Operator ??
+    // a ?? b -> if a is nil , check b. if a isn't nil skip the b.
+
+/*
+    ? Strings and Characters
+*/
+//* multiline string: """ lorem ipsum
+//                       dolor sit amet
+//                       lorem lorem """
+
+//* special characters in string literals
+// \0 -> null char
+// \\ -> backslash
+// \t -> horizontal tab
+// \' -> single quatation mark
+// \n -> line feed
+// \r -> carriage return (satır başı)
+// \" -> double quatation mark
+// \u{n} -> unicode scalar value, where n is 1-8 digit hex number
+
+// .isEmpty -> empty check
+// for character in stringValue -> give letters
+// stringValue.append(otherStringValue) -> concat
+// \(veriable) -> string interpolatien
+
+/*
+    ? Collection Types
+*/
+//* Arrays
+// ordered collection
+// creating an array with a default value
+var threeBoubles = Array(repating:0.0, count: 3) // [0.0, 0.0, 0.0]
+// Accessing and Modifying an Array
+    // array methods
+        // array.count -> item count of the array
+        // array.append -> add new item to the array
+        // array.isEmpty ->  does the array have any items?
+        // array.insert("new item", at: 2) -> add to specific index
+        // array.remove(at: 2) -> remove from specific index
+        // array.removeFirst() and array.removeLast()
+        // array.enumarated() -> return (index, value) tuple in for-in loops
+            for (index, value) in shoppingList.enumerated() {
+                print("Item \(index + 1): \(value)")
+            }
+    // array += otherArray -> This works
+    // array[4..6] = ["item 1", "item 2"] -> This also works 
