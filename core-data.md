@@ -2,8 +2,8 @@
 
 ### Adding CoreData to existing project
 
-- Create new data model file: `File` > `New` > `File` > `DataModel`
-- Updata `AppDelegate.swift` file
+- Create new data model file: `Xcode` > `File` > `New` > `File` > `DataModel`
+- Update `AppDelegate.swift` file
 
 ```swift
 import UIKit
@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 ```
 
-- Create your entities using `DataModel`file
+- Create your entities using `DataModel` file
 - Done! 🎉
 
 ### CREATE/SAVE data
@@ -111,9 +111,10 @@ context.save() // inside do-catch block
 - [NSPredicate Cheatsheet](https://static.realm.io/downloads/files/NSPredicateCheatsheet.pdf)
 - [NSPredicate by NSHipster](https://nshipster.com/nspredicate/)
 
+#### Querying using Search Bar
+
 ```swift
-// Querying using Search Bar
-extension TodoListViewController: UISearchBarDelegate {
+extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text {
             let request: NSFetchRequest<Item> = Item.fetchRequest()
