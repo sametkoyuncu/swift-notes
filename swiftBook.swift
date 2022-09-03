@@ -151,3 +151,102 @@ var threeBoubles = Array(repating:0.0, count: 3) // [0.0, 0.0, 0.0]
             }
     // array += otherArray -> This works
     // array[4..6] = ["item 1", "item 2"] -> This also works 
+//* Sets
+// unordered and unique
+var letters = Set<Character>() // create empty Set
+var letters2: Set<Character> = ["a", "b", "c"]
+letters2 = [] // letter s empty now, type still same
+
+// methods
+letters.insert("z") // add item to letters
+letters.remove("z") // remove item from letters
+letters.contains("a") // 
+letters.removeAll() // remove all items from letters
+letters.sorted() // sort items 
+
+// fundamentals set operations
+var a = Set<Character>()
+var b = Set<Character>()
+a.intersection(b)           // a ile b'nin kesişimi
+a.union(b)                  // a ile b'nin birleşimi
+a.symmetricDifference(b)    // a ile b'nin farklı elemanları birleşimi
+a.subtracting(b)            // a'nın b'den farklı elemanları
+// other methods
+a.isSubset(of:b)
+a.isSuperset(of:b)
+a.Disjoint(with:b)
+a.isStrictSubset(of:b)
+a.isStrictSuperset(of:b)
+
+//* Dictionaries
+// (key: value)
+var nameOfIntegers: [Int: String] = [:] // is an empty dictionary
+nameOfIntegers[16] = "sixteen"
+// key: 16, value: sixteen
+nameOfIntegers.updateValue("Sixteen", forKey: 16)
+nameOfIntegers.removeValue(forkey: 16) // return removed value
+nameOfIntegers.key // return keys
+nameOfIntegers.values // return values
+nameOfIntegers.sorted()
+
+/*
+    ? Control Flow
+*/
+let numberOfLegs = ["spider":8, "ant":6, "cat":4]
+// for-in
+for (animalName, legCount) in numberOrlegs { }
+for index in 1...5 { }
+
+// coulddown #stride
+for tickMark in stride(from: 0, to: 60, by: 5) {
+    print(tickMark)
+} // prints: 0, 5, 10, ..., 55
+//! 'by' can be negative number like "-5"
+//! to: -> <, > | through: -> <=, >=
+
+while condition {
+    statemets
+}
+
+repeat {
+    statemets
+} while condition
+
+// switch-case
+switch number {
+case 1...5:
+    print("this works")
+default:
+    // default
+}
+    // switch-case with tuples
+    switch value {
+    case (0, 0):
+    case (_, 0):
+    case (0, _):
+    case (-2...2, -2...2):
+    default:
+    }
+// value binding
+case(0, let y):
+    print(y)
+
+// where
+switch point {
+case let (x, y) where x==y:
+    print("equal")
+case let (x, y):
+    print("not equal")
+default:   
+}
+// compound cases
+case a, b, c:
+
+// control transfer statements
+continue
+    // it says "I am done with the current loop iteration" without leaving the loop altogether.
+fallthrough // eşlelsen tüm case'ler çalışır, normalde ilk eşleşen tamamlanır, çıkar
+throw // described in error handling
+break
+    // ends execution of an entire control flow statement immediately
+return // described in functions

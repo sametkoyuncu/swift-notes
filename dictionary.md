@@ -2,6 +2,7 @@
 
 - absence: yokluk
 - absent: mevcut olmayan
+- altogether: tamamen
 - appropriate: Uygun, yerinde, özgü.
 - assertion: iddia
 - assignment: atama
