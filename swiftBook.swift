@@ -193,17 +193,18 @@ nameOfIntegers.sorted()
     ? Control Flow
 */
 let numberOfLegs = ["spider":8, "ant":6, "cat":4]
-// for-in
+//* for-in
 for (animalName, legCount) in numberOrlegs { }
 for index in 1...5 { }
 
-// coulddown #stride
+//* coulddown #stride
 for tickMark in stride(from: 0, to: 60, by: 5) {
     print(tickMark)
 } // prints: 0, 5, 10, ..., 55
 //! 'by' can be negative number like "-5"
 //! to: -> <, > | through: -> <=, >=
 
+//* while and repeat-while
 while condition {
     statemets
 }
@@ -212,7 +213,7 @@ repeat {
     statemets
 } while condition
 
-// switch-case
+//* switch-case
 switch number {
 case 1...5:
     print("this works")
@@ -242,7 +243,7 @@ default:
 // compound cases
 case a, b, c:
 
-// control transfer statements
+//* control transfer statements
 continue
     // it says "I am done with the current loop iteration" without leaving the loop altogether.
 fallthrough // eşlelsen tüm case'ler çalışır, normalde ilk eşleşen tamamlanır, çıkar
@@ -250,3 +251,120 @@ throw // described in error handling
 break
     // ends execution of an entire control flow statement immediately
 return // described in functions
+
+//* labeled statements
+gameLoop: while square != finalSquare {
+    diceRoll += 1
+    if diceRoll == 7 {
+        diceRoll = 1
+    }
+
+    switch square + diceRoll {
+    case finalSquare:
+        break gameLoop
+    case let newSquare where newSquare > finalSquare
+        continue gameLoop
+    default:
+        square += diceRoll
+        square += board[square]
+    }
+}
+print("Gamer over!")
+
+//* Early Exit (a.k.a. Early Return)
+func greet(person: [String: String]) {
+    guard let name = person["name"] else {
+        return
+    }
+
+    print("Welcome, \(name)")
+}
+
+//? checking API availability
+// Swift has built-in support for checking API availability, which ensures that you don’t accidentally use APIs that are unavailable on a given deployment target.
+
+/*
+    ? Functions
+*/
+
+func printAndCount(str: String) -> Int {
+    print(str)
+    return str.count // return int
+}
+
+func printWithoutCount(str: String) {
+    print(str)
+}
+
+// funtions can return tuple or multiple value with paranthesies
+
+// argument and parameter names
+func myFunc(argumentName parameterName: String) {
+    print(parameterName)
+}
+myFunc(argumentName: "hello")
+
+// omiting argument label with '_'
+func myFunc(_ parameterName: String) {
+    print(parameterName)
+}
+myFunc("hello")
+
+//* Variadic Parameters
+func arithmeticMean(_ numbers: Double...) -> Double {
+    var total: Double = 0
+    for num in numbers {
+        total += num
+    }
+    return total / numbers.count
+}
+
+//* in-out parameters
+func swapTwoInts(_ a: inout Int, _ b: inout Int) {
+    let temporaryA = a
+    a = b
+    b = temporaryA
+}
+
+var someInt = 3
+var anotherInt = 107
+swapTwoInts(&someInt, &anotherInt)
+print("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
+// Prints "someInt is now 107, and anotherInt is now 3"
+
+//* Function types
+func addTwoInts(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}
+    // Using Function Types
+    var mathFunction: (Int, Int) -> Int = addTwoInts
+    print("Result: \(mathFunction(2, 3))")
+    // Prints "Result: 5"
+
+    // Function Types as Parameter Types
+    func printMathResult(_ mathFunction: (Int, Int) -> Int, _ a: Int, _ b: Int) {
+        print("Result: \(mathFunction(a, b))")
+    }
+    printMathResult(addTwoInts, 3, 5)
+    // Prints "Result: 8"
+
+    // Function Types as Return Types
+    func stepForward(_ input: Int) -> Int {
+        return input + 1
+    }
+    func stepBackward(_ input: Int) -> Int {
+        return input - 1
+    }
+
+    func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+        return backward ? stepBackward : stepForward
+    }
+
+//* Nested functions
+// you can also define functions inside the  bodies of other functions, known as nested functions
+func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+    // nested func
+    func stepForward(input: Int) -> Int { return input + 1 }
+    func stepBackward(input: Int) -> Int { return input - 1 }
+    return backward ? stepBackward : stepForward
+}
