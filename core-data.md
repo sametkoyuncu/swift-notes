@@ -1,8 +1,11 @@
-//! Add CoreData to existing project.
-//* create a new data model file named 'DataModel'
-// File > New > File > DataModel
+# Core Data
 
-//* update 'AppDelegate.swift' file
+### Adding CoreData to existing project
+
+- Create new data model file: `File` > `New` > `File` > `DataModel`
+- Updata `AppDelegate.swift` file
+
+```swift
 import UIKit
 import CoreData
 
@@ -23,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
 
-    //? MARK: - Core Data stack
+    // MARK: - Core Data stack
     // lazy: A lazy var is a property whose initial value is not calculated until the first time it's called.
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "DataModel")
@@ -35,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
 
-    //? MARK: - Core Data Saving support
+    // MARK: - Core Data Saving support
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -48,11 +51,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 }
+```
 
-//* create your entities
-// entity: class, attribure: property
+- Create your entities using `DataModel`file
+- Done! 🎉
 
-//* CREATE/SAVE data
+### CREATE/SAVE data
+
+```swift
 import CoreData
 // get context from appdelegate
 let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContainer.viewContext
@@ -65,25 +71,64 @@ do {
 } catch {
     print("Error saving context, \(error)")
 }
+```
 
-//* READ data
-// Item our entity
+### READ data
+
+```swift
+// Item is our entity
 let request: NSFetchRequest<Item> = Item.fetchRequest()
 do {
     itemArray = try context.fetch(request)
 } catch {
     print("Error fetching data from context, \(error)")
 }
+```
 
-//* UPDATE data
+### UPDATE data
+
+```swift
 itemArray[indexPath.row].setValue("Updated item", forKey: "title")
 // or
 itemArray[indexPath.row].isDone = !itemArray[indexPath.row].isDone
 // and after
 context.save() // inside do-catch block
+```
 
-//* DELETE data
+### DELETE/DESTROY data
+
+```swift
 context.delete(itemArray[indexPath.row]) // must be first
 itemArray.remove(at: indexPath.row)
 // and after
 context.save() // inside do-catch block
+```
+
+### QUERYING data
+
+#### Useful Documents
+
+- [NSPredicate Cheatsheet](https://static.realm.io/downloads/files/NSPredicateCheatsheet.pdf)
+- [NSPredicate by NSHipster](https://nshipster.com/nspredicate/)
+
+```swift
+// Querying using Search Bar
+extension TodoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let searchText = searchBar.text {
+            let request: NSFetchRequest<Item> = Item.fetchRequest()
+            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+                // c: case insensetive d: diacritic insensetive
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+
+            do {
+                itemArray = try context.fetch(request)
+            } catch {
+                print("Error fetching data from context, \(error)")
+            }
+
+            tableView.reloadData()
+        }
+    }
+}
+```
