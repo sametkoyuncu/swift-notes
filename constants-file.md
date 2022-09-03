@@ -1,4 +1,4 @@
-# How to create constants file?
+# How to create a constants file?
 
 - Create a new `Constants.swift` file.
 
