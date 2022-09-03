@@ -26,7 +26,7 @@ let dictionary = [404: "page not found", 200: "Ok"]
 // defaults.set(dictionary, forKey: "statusCodes") // error ?
 ```
 
--get data
+- get data
 
 ```swift
 let volume = defaults.float(forKey: "Volume")
@@ -37,4 +37,4 @@ let myArray = defaults.array(forKey: "myArray") as! [Int] // because set optiona
 let myDictionary = defaults.dictionary(forKey: "statusCodes")
 ```
 
-- For more info look this article. -> [UserDefaults](For more info look this article.)
+- For more info look this article. -> [UserDefaults](https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults)
