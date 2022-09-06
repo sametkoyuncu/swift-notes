@@ -2,7 +2,9 @@
 
 My Swift journey..
 
-### 📘 Table of Contents
+## 📘 Table of Contents
+
+#### General
 
 - Swift Book Notes -> [swiftBook.swift](https://github.com/sametkoyuncu/swift-notes/blob/master/swiftBook.swift)
 - How to create a Constants file? -> [constants-file.md](https://github.com/sametkoyuncu/swift-notes/blob/master/constants-file.md)
