@@ -6,8 +6,14 @@ My Swift journey..
 
 - Swift Book Notes -> [swiftBook.swift](https://github.com/sametkoyuncu/swift-notes/blob/master/swiftBook.swift)
 - How to create a Constants file? -> [constants-file.md](https://github.com/sametkoyuncu/swift-notes/blob/master/constants-file.md)
-- CoreData usage -> [core-data.md](https://github.com/sametkoyuncu/swift-notes/blob/master/core-data.md)
 - What is Singleton Object? -> [singleton-object.md](https://github.com/sametkoyuncu/swift-notes/blob/master/singleton-object.md)
 - How to use UserDefaults? -> [user-defaults.md](https://github.com/sametkoyuncu/swift-notes/blob/master/user-defaults.md)
+
+#### Data Storage
+
+- CoreData usage -> [core-data.md](https://github.com/sametkoyuncu/swift-notes/blob/master/core-data.md)
+- Realm Swift usage -> [realm-database.md](https://github.com/sametkoyuncu/swift-notes/blob/master/realm-database.md)
+
+#### Others
 
 - ENG-TR Dictionary -> [Dictionary](https://github.com/sametkoyuncu/swift-notes/blob/master/dictionary.md)
