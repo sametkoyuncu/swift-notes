@@ -7,9 +7,6 @@
 ```swift
 struct Functions {
     // convert from UIColor to List<Double>
-    // I used List because, I want to save realm db.
-    // you can change 'List<Double>' to what you want?
-    // like: [Double] etc.
     static func getListFromUIColor(for color: UIColor) -> List<Double> {
         let components = color.cgColor.components ?? [1.0, 1.0, 1.0, 1.0]
 
