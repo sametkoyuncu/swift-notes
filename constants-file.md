@@ -2,7 +2,7 @@
 
 - Create a new `Constants.swift` file.
 
-- Create a Struct inside the `Constants.swift` file. You name `Constants`, `K`, or what you want. :)
+- Create a Struct inside the `Constants.swift` file. You name the file `Constants`, `K`, or what you want. :)
 
 - Add `static let` properties to the Struct. Like below.
 
