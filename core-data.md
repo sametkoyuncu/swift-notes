@@ -2,8 +2,8 @@
 
 ### Adding CoreData to existing project
 
-- Create new data model file: `Xcode` > `File` > `New` > `File` > `DataModel`
-- Update `AppDelegate.swift` file
+- Create a new data model file: `Xcode` > `File` > `New` > `File` > `DataModel`
+- Modify `AppDelegate.swift` file
 
 ```swift
 import UIKit
