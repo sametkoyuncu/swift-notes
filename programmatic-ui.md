@@ -42,8 +42,7 @@ override func viewDidLoad() {
 
 ### Configure Constraints
 
-> leading: left
-> trailing: right
+> `leading:` left | `trailing:` right
 
 ```swift
 private func configureConstraints() {
@@ -67,4 +66,4 @@ private func configureConstraints() {
 
 ### Screenshot
 
-![programmatic-ui-ss]()
+![programmatic-ui-ss](https://github.com/sametkoyuncu/swift-notes/blob/master/images/programmaticUI.png)
