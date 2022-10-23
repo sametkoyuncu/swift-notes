@@ -1,5 +1,5 @@
 //! Day 1
-//todo: source -> https://www.hackingwithswift.com/100/1
+//? source -> https://www.hackingwithswift.com/100/1
 //* Variables
 // That creates a new variable called str, giving it the value “Hello, playground”.
 var str = "Hello, playground"

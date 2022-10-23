@@ -13,6 +13,7 @@
 
 # C
 
+- competent: yetkili
 - compound: birleştirmek, bileşik, karışık
 - concise: özlü
 - confident: kendinden emin
@@ -41,6 +42,11 @@
 - injury: İncinme, hasar, zarar, yara.
 - interpolation: İnterpolasyon, ekleme yapma, ara değeri bulma.
 
+# F
+
+- fuzzy: bulanık, belirsiz, uçuşan, hayal meyal, tüy gibi, ince tüylü, kabarık saçlı
+  > having a frizzy (kıvırcık), fluffy (kabarık), or frayed (yıpranmış) texture or appearance.
+
 # M
 
 - manner: tarz, tavır, tutum, davranış
@@ -53,16 +59,22 @@
 # P
 
 - phrase: ifade etmek
+- precisely: tam
+  > in exact terms; without vagueness (belirsizlik).
+  > "the guidelines are precisely defined"
 - presence: mevcut, varlık
 - propagate: yaymak
 - provide: sağlamak
 
 # R
 
+- rearrange: yeniden düzenlemek
 - regardless: ne olursa olsun
+- retrieval: geri alma
 
 # S
 
+- seemingly: görünüşte
 - suited: uygun, yeterli
 
   > 1. right or appropriate for a particular person, purpose, or situation.
@@ -79,6 +91,10 @@
 # U
 
 - unwrap: paketini açmak, açmak
+
+# V
+
+- vagueness: belirsizlik
 
 # W
 
