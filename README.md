@@ -21,3 +21,4 @@ My Swift journey..
 
 - ENG-TR Dictionary -> [Dictionary](https://github.com/sametkoyuncu/swift-notes/blob/master/dictionary.md)
 - Observable.swift -> [Source Code](https://github.com/sametkoyuncu/swift-notes/blob/master/sources/Observable.swift)
+- StateChangeHandler.swift -> [Source Code](https://github.com/sametkoyuncu/swift-notes/blob/master/sources/StateChangeHandler.swift)
