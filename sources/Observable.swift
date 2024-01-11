@@ -11,10 +11,15 @@ class Observable<T> {
     _callback = callback
 }
 
-  // view model içi
-  // var messageText: Observable<String> = Observable()
+class ViewModel {
+  var messageText: Observable<String> = Observable()
+}
 
-  viewModel.messageText.bind = { [weak self] value in
-                                self?.messageLabel.text = value
-                               }
+class ViewController: UIViewController {
+    viewModel.messageText.bind = { [weak self] value in
+                              self?.messageLabel.text = value
+                             }
+}
+
+
     
