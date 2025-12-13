@@ -24,6 +24,7 @@ My Swift journey..
 - Combine and AsyncSequence -> [combine-and-asyncsequence.md](https://github.com/sametkoyuncu/swift-notes/blob/master/combine-and-asyncsequence.md)
 - Property Wrappers and Result Builders -> [property-wrappers-and-builders.md](https://github.com/sametkoyuncu/swift-notes/blob/master/property-wrappers-and-builders.md)
 - KeyPaths and Pattern Matching -> [keypaths-and-pattern-matching.md](https://github.com/sametkoyuncu/swift-notes/blob/master/keypaths-and-pattern-matching.md)
+- Observation Macros (@Observable/@Bindable) -> [observation-macros.md](https://github.com/sametkoyuncu/swift-notes/blob/master/observation-macros.md)
 
 #### Data Storage
 
