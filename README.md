@@ -16,6 +16,7 @@ My Swift journey..
 - Generics and Constraints -> [generics-and-constraints.md](https://github.com/sametkoyuncu/swift-notes/blob/master/generics-and-constraints.md)
 - Protocols, Existentials, and Composition -> [protocols-and-existentials.md](https://github.com/sametkoyuncu/swift-notes/blob/master/protocols-and-existentials.md)
 - Swift Concurrency (version cues) -> [swift-concurrency.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swift-concurrency.md)
+- Error Handling (version cues) -> [error-handling.md](https://github.com/sametkoyuncu/swift-notes/blob/master/error-handling.md)
 
 #### Data Storage
 
