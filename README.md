@@ -17,6 +17,7 @@ My Swift journey..
 - Protocols, Existentials, and Composition -> [protocols-and-existentials.md](https://github.com/sametkoyuncu/swift-notes/blob/master/protocols-and-existentials.md)
 - Swift Concurrency (version cues) -> [swift-concurrency.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swift-concurrency.md)
 - Error Handling (version cues) -> [error-handling.md](https://github.com/sametkoyuncu/swift-notes/blob/master/error-handling.md)
+- SwiftUI State Management -> [swiftui-state.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swiftui-state.md)
 
 #### Data Storage
 
