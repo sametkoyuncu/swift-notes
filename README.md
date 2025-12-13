@@ -18,6 +18,7 @@ My Swift journey..
 - Swift Concurrency (version cues) -> [swift-concurrency.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swift-concurrency.md)
 - Error Handling (version cues) -> [error-handling.md](https://github.com/sametkoyuncu/swift-notes/blob/master/error-handling.md)
 - SwiftUI State Management -> [swiftui-state.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swiftui-state.md)
+- Memory and Value Semantics -> [memory-and-semantics.md](https://github.com/sametkoyuncu/swift-notes/blob/master/memory-and-semantics.md)
 
 #### Data Storage
 
