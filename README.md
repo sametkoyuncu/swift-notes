@@ -11,6 +11,7 @@ My Swift journey..
 - What is Singleton Object? -> [singleton-object.md](https://github.com/sametkoyuncu/swift-notes/blob/master/singleton-object.md)
 - How to use UserDefaults? -> [user-defaults.md](https://github.com/sametkoyuncu/swift-notes/blob/master/user-defaults.md)
 - Programmatic UI Samples-> [programmatic-ui.md](https://github.com/sametkoyuncu/swift-notes/blob/master/programmatic-ui.md)
+- Associated Types in Swift -> [associated-types.md](https://github.com/sametkoyuncu/swift-notes/blob/master/associated-types.md)
 - Opaque Types in Swift -> [opaque-types.md](https://github.com/sametkoyuncu/swift-notes/blob/master/opaque-types.md)
 
 #### Data Storage
