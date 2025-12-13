@@ -13,6 +13,7 @@ My Swift journey..
 - Programmatic UI Samples-> [programmatic-ui.md](https://github.com/sametkoyuncu/swift-notes/blob/master/programmatic-ui.md)
 - Associated Types in Swift -> [associated-types.md](https://github.com/sametkoyuncu/swift-notes/blob/master/associated-types.md)
 - Opaque Types in Swift -> [opaque-types.md](https://github.com/sametkoyuncu/swift-notes/blob/master/opaque-types.md)
+- Generics and Constraints -> [generics-and-constraints.md](https://github.com/sametkoyuncu/swift-notes/blob/master/generics-and-constraints.md)
 - Swift Concurrency (version cues) -> [swift-concurrency.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swift-concurrency.md)
 
 #### Data Storage
