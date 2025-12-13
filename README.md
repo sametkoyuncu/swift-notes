@@ -14,6 +14,7 @@ My Swift journey..
 - Associated Types in Swift -> [associated-types.md](https://github.com/sametkoyuncu/swift-notes/blob/master/associated-types.md)
 - Opaque Types in Swift -> [opaque-types.md](https://github.com/sametkoyuncu/swift-notes/blob/master/opaque-types.md)
 - Generics and Constraints -> [generics-and-constraints.md](https://github.com/sametkoyuncu/swift-notes/blob/master/generics-and-constraints.md)
+- Protocols, Existentials, and Composition -> [protocols-and-existentials.md](https://github.com/sametkoyuncu/swift-notes/blob/master/protocols-and-existentials.md)
 - Swift Concurrency (version cues) -> [swift-concurrency.md](https://github.com/sametkoyuncu/swift-notes/blob/master/swift-concurrency.md)
 
 #### Data Storage
