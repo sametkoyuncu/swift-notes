@@ -23,6 +23,7 @@ My Swift journey..
 - Collections and Algorithms -> [collections-and-algorithms.md](https://github.com/sametkoyuncu/swift-notes/blob/master/collections-and-algorithms.md)
 - Combine and AsyncSequence -> [combine-and-asyncsequence.md](https://github.com/sametkoyuncu/swift-notes/blob/master/combine-and-asyncsequence.md)
 - Property Wrappers and Result Builders -> [property-wrappers-and-builders.md](https://github.com/sametkoyuncu/swift-notes/blob/master/property-wrappers-and-builders.md)
+- KeyPaths and Pattern Matching -> [keypaths-and-pattern-matching.md](https://github.com/sametkoyuncu/swift-notes/blob/master/keypaths-and-pattern-matching.md)
 
 #### Data Storage
 
