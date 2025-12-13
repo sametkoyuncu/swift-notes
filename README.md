@@ -21,6 +21,7 @@ My Swift journey..
 - Memory and Value Semantics -> [memory-and-semantics.md](https://github.com/sametkoyuncu/swift-notes/blob/master/memory-and-semantics.md)
 - Collections and Algorithms -> [collections-and-algorithms.md](https://github.com/sametkoyuncu/swift-notes/blob/master/collections-and-algorithms.md)
 - Combine and AsyncSequence -> [combine-and-asyncsequence.md](https://github.com/sametkoyuncu/swift-notes/blob/master/combine-and-asyncsequence.md)
+- Property Wrappers and Result Builders -> [property-wrappers-and-builders.md](https://github.com/sametkoyuncu/swift-notes/blob/master/property-wrappers-and-builders.md)
 
 #### Data Storage
 
