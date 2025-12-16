@@ -3,10 +3,10 @@ languageCode = "en-us"
 title = "Swift Notes"
 theme = ["github.com/adityatelange/hugo-PaperMod"]
 min_version = "0.146.0"
+pagination = { pagerSize = 20 }
 enableRobotsTXT = true
 relativeURLs = true
 canonifyURLs = true
-paginate = 20
 defaultContentLanguage = "en"
 ignoreFiles = ["_template\\.md$", "_cheat_sheet_backlog\\.md$"]
 
