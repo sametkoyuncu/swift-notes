@@ -5,7 +5,6 @@ theme = "github.com/adityatelange/hugo-PaperMod"
 min_version = "0.146.0"
 pagination = { pagerSize = 20 }
 enableRobotsTXT = true
-relativeURLs = true
 canonifyURLs = true
 defaultContentLanguage = "en"
 ignoreFiles = ["_template\\.md$", "_cheat_sheet_backlog\\.md$"]
@@ -46,12 +45,12 @@ ignoreFiles = ["_template\\.md$", "_cheat_sheet_backlog\\.md$"]
 [menu]
   [[menu.main]]
     name = "Notes"
-    url = "/notes/"
+    url = "notes/"
     weight = 10
 
   [[menu.main]]
     name = "Cheat Sheets"
-    url = "/cheat-sheets/"
+    url = "cheat-sheets/"
     weight = 20
 
 [module]
