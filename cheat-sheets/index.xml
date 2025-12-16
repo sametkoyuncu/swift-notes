@@ -147,4 +147,12 @@ Each document is designed for quick recall rather than full tutorials.&lt;/p>
 &lt;li>&lt;code>any&lt;/code> = type-erased container, flexible, dynamically dispatched&lt;/li>
 &lt;li>&lt;code>some&lt;/code> preserves optimization; &lt;code>any&lt;/code> trades performance for flexibility&lt;/li>
 &lt;li>Default to &lt;code>some&lt;/code> (or generics); reach for &lt;code>any&lt;/code> only when necessary&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/ul></description></item><item><title/><link>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/swiftui-view-identity-and-lifetime/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/swiftui-view-identity-and-lifetime/</guid><description>&lt;p>SwiftUI View Identity &amp;amp; Lifetime&lt;/p>
+&lt;ol>
+&lt;li>What is it?&lt;/li>
+&lt;/ol>
+&lt;p>SwiftUI’s model where View values are cheap, ephemeral structs, while identity determines which underlying persistent backing store (state, subscriptions, render resources) is reused across updates. “Lifetime” is mostly about the lifetime of that backing store, not the View value.&lt;/p>
+&lt;ol start="2">
+&lt;li>What problem does it solve?&lt;/li>
+&lt;/ol>
+&lt;p>Enables a pure(ish) declarative UI where the framework can diff successive body results and update only what changed, while preserving state for “the same” conceptual view across recomputations.&lt;/p></description></item></channel></rss>
