@@ -4,7 +4,9 @@ My Swift journey..
 
 ## ℹ️ About
 
-Personal Swift notes and snippets I use to learn and quickly refresh topics. Covers language features, SwiftUI, concurrency, error handling, storage options, and utility code in one place for fast reference.
+Personal Swift notes and snippets used for learning and quick topic refresh.
+Covers language features, SwiftUI, concurrency, error handling, storage options,
+and utility code for fast reference.
 
 ## 📂 Directories
 
@@ -16,6 +18,7 @@ Personal Swift notes and snippets I use to learn and quickly refresh topics. Cov
 ## 📘 Table of Contents
 
 ### Cheat Sheets
+Short, high-signal references designed for quick recall.
 
 - Dispatch -> [cheat-sheets/dispatch.md](cheat-sheets/dispatch.md)
 - some vs any (Opaque vs Existential) -> [cheat-sheets/some-vs-any.md](cheat-sheets/some-vs-any.md)
