@@ -6,7 +6,8 @@ My Swift journey..
 
 Personal Swift notes and snippets used for learning and quick topic refresh.
 Covers language features, SwiftUI, concurrency, error handling, storage options,
-and utility code for fast reference.
+and utility code for fast reference. Browse the rendered site on GitHub Pages:
+[Swift Notes](https://sametkoyuncu.github.io/swift-notes/).
 
 ## 📂 Directories
 

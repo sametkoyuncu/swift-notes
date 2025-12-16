@@ -1,0 +1,74 @@
+baseURL = "https://sametkoyuncu.github.io/swift-notes/"
+languageCode = "en-us"
+title = "Swift Notes"
+theme = "PaperMod"
+enableRobotsTXT = true
+relativeURLs = true
+canonifyURLs = true
+paginate = 20
+defaultContentLanguage = "en"
+ignoreFiles = ["_template\\.md$", "_cheat_sheet_backlog\\.md$"]
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[permalinks]
+  "notes/items" = "/notes/:slug/"
+  "cheat-sheets/items" = "/cheat-sheets/:slug/"
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = ""
+    lineNos = true
+    noClasses = false
+    style = "github-dark"
+    tabWidth = 4
+
+[params]
+  env = "production"
+  description = "Swift notes, cheat sheets, and quick references."
+  keywords = ["Swift", "SwiftUI", "iOS", "notes", "cheat sheets"]
+  defaultTheme = "auto"
+  ShowBreadCrumbs = true
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  search = true
+  mainSections = ["notes", "cheat-sheets"]
+
+  [params.assets]
+    disableHLJS = true
+
+[menu]
+  [[menu.main]]
+    name = "Notes"
+    url = "/notes/"
+    weight = 10
+
+  [[menu.main]]
+    name = "Cheat Sheets"
+    url = "/cheat-sheets/"
+    weight = 20
+
+[module]
+  [[module.imports]]
+    path = "github.com/adityatelange/hugo-PaperMod"
+
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+
+  [[module.mounts]]
+    source = "../notes"
+    target = "content/notes/items"
+
+  [[module.mounts]]
+    source = "../cheat-sheets"
+    target = "content/cheat-sheets/items"
+
+  [[module.mounts]]
+    source = "static"
+    target = "static"
