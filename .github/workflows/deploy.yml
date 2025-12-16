@@ -46,6 +46,10 @@ jobs:
         run: hugo mod tidy
         working-directory: site
 
+      - name: Vendor modules
+        run: hugo mod vendor
+        working-directory: site
+
       - name: Build site
         run: hugo --gc --minify
         working-directory: site

@@ -1,7 +1,7 @@
 baseURL = "https://sametkoyuncu.github.io/swift-notes/"
 languageCode = "en-us"
 title = "Swift Notes"
-theme = "PaperMod"
+theme = ["github.com/adityatelange/hugo-PaperMod"]
 enableRobotsTXT = true
 relativeURLs = true
 canonifyURLs = true
