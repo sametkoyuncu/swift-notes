@@ -1,7 +1,7 @@
 baseURL = "https://sametkoyuncu.github.io/swift-notes/"
 languageCode = "en-us"
 title = "Swift Notes"
-theme = "PaperMod"
+theme = "github.com/adityatelange/hugo-PaperMod"
 min_version = "0.146.0"
 pagination = { pagerSize = 20 }
 enableRobotsTXT = true
