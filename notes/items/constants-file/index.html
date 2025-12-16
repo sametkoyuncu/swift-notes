@@ -1,0 +1,174 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Swift Notes</title>
+<meta name=keywords content><meta name=description content='How to create a constants file?
+
+
+Create a new Constants.swift file.
+
+
+Create a Struct inside the Constants.swift file. You name the file Constants, K, or what you want. :)
+
+
+Add static let properties to the Struct. Like below.
+
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+
+struct K {
+    static let cellIdentifier = "ReusableCell"
+    static let cellNibName = "MessageCell"
+    static let registerSegue = "RegisterToChat"
+    static let loginSegue = "LoginToChat"
+    // If you wish, you can add a group for similar content.
+    struct BrandColors {
+        static let purple = "BrandPurple"
+        static let lightPurple = "BrandLightPurple"
+        static let blue = "BrandBlue"
+        static let lighBlue = "BrandLightBlue"
+    }
+
+    struct FStore {
+        static let collectionName = "messages"
+        static let senderField = "sender"
+        static let bodyField = "body"
+        static let dateField = "date"
+    }
+}
+
+
+Usage
+
+print(K.cellIdentifier)
+print(K.BrandColors.purple)
+'><meta name=author content><link rel=canonical href=https://sametkoyuncu.github.io/swift-notes/notes/items/constants-file/><link crossorigin=anonymous href=../../../swift-notes/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css integrity="sha256-NDzEgLn/yPBMy+XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as=style><link rel=icon href=https://sametkoyuncu.github.io/swift-notes/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://sametkoyuncu.github.io/swift-notes/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://sametkoyuncu.github.io/swift-notes/favicon-32x32.png><link rel=apple-touch-icon href=https://sametkoyuncu.github.io/swift-notes/apple-touch-icon.png><link rel=mask-icon href=https://sametkoyuncu.github.io/swift-notes/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://sametkoyuncu.github.io/swift-notes/notes/items/constants-file/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://sametkoyuncu.github.io/swift-notes/notes/items/constants-file/"><meta property="og:site_name" content="Swift Notes"><meta property="og:title" content="Swift Notes"><meta property="og:description" content='How to create a constants file? Create a new Constants.swift file.
+Create a Struct inside the Constants.swift file. You name the file Constants, K, or what you want. :)
+Add static let properties to the Struct. Like below.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 struct K { static let cellIdentifier = "ReusableCell" static let cellNibName = "MessageCell" static let registerSegue = "RegisterToChat" static let loginSegue = "LoginToChat" // If you wish, you can add a group for similar content. struct BrandColors { static let purple = "BrandPurple" static let lightPurple = "BrandLightPurple" static let blue = "BrandBlue" static let lighBlue = "BrandLightBlue" } struct FStore { static let collectionName = "messages" static let senderField = "sender" static let bodyField = "body" static let dateField = "date" } } Usage print(K.cellIdentifier) print(K.BrandColors.purple) '><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="notes"><meta name=twitter:card content="summary"><meta name=twitter:title content><meta name=twitter:description content='How to create a constants file?
+
+
+Create a new Constants.swift file.
+
+
+Create a Struct inside the Constants.swift file. You name the file Constants, K, or what you want. :)
+
+
+Add static let properties to the Struct. Like below.
+
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+
+struct K {
+    static let cellIdentifier = "ReusableCell"
+    static let cellNibName = "MessageCell"
+    static let registerSegue = "RegisterToChat"
+    static let loginSegue = "LoginToChat"
+    // If you wish, you can add a group for similar content.
+    struct BrandColors {
+        static let purple = "BrandPurple"
+        static let lightPurple = "BrandLightPurple"
+        static let blue = "BrandBlue"
+        static let lighBlue = "BrandLightBlue"
+    }
+
+    struct FStore {
+        static let collectionName = "messages"
+        static let senderField = "sender"
+        static let bodyField = "body"
+        static let dateField = "date"
+    }
+}
+
+
+Usage
+
+print(K.cellIdentifier)
+print(K.BrandColors.purple)
+'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://sametkoyuncu.github.io/swift-notes/notes/"},{"@type":"ListItem","position":2,"name":"","item":"https://sametkoyuncu.github.io/swift-notes/notes/items/constants-file/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"","name":"","description":"How to create a constants file? Create a new Constants.swift file.\nCreate a Struct inside the Constants.swift file. You name the file Constants, K, or what you want. :)\nAdd static let properties to the Struct. Like below.\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 struct K { static let cellIdentifier = \u0026#34;ReusableCell\u0026#34; static let cellNibName = \u0026#34;MessageCell\u0026#34; static let registerSegue = \u0026#34;RegisterToChat\u0026#34; static let loginSegue = \u0026#34;LoginToChat\u0026#34; // If you wish, you can add a group for similar content. struct BrandColors { static let purple = \u0026#34;BrandPurple\u0026#34; static let lightPurple = \u0026#34;BrandLightPurple\u0026#34; static let blue = \u0026#34;BrandBlue\u0026#34; static let lighBlue = \u0026#34;BrandLightBlue\u0026#34; } struct FStore { static let collectionName = \u0026#34;messages\u0026#34; static let senderField = \u0026#34;sender\u0026#34; static let bodyField = \u0026#34;body\u0026#34; static let dateField = \u0026#34;date\u0026#34; } } Usage print(K.cellIdentifier) print(K.BrandColors.purple) ","keywords":[],"articleBody":"How to create a constants file? Create a new Constants.swift file.\nCreate a Struct inside the Constants.swift file. You name the file Constants, K, or what you want. :)\nAdd static let properties to the Struct. Like below.\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 struct K { static let cellIdentifier = \"ReusableCell\" static let cellNibName = \"MessageCell\" static let registerSegue = \"RegisterToChat\" static let loginSegue = \"LoginToChat\" // If you wish, you can add a group for similar content. struct BrandColors { static let purple = \"BrandPurple\" static let lightPurple = \"BrandLightPurple\" static let blue = \"BrandBlue\" static let lighBlue = \"BrandLightBlue\" } struct FStore { static let collectionName = \"messages\" static let senderField = \"sender\" static let bodyField = \"body\" static let dateField = \"date\" } } Usage print(K.cellIdentifier) print(K.BrandColors.purple) ","wordCount":"145","inLanguage":"en","datePublished":"0001-01-01T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://sametkoyuncu.github.io/swift-notes/notes/items/constants-file/"},"publisher":{"@type":"Organization","name":"Swift Notes","logo":{"@type":"ImageObject","url":"https://sametkoyuncu.github.io/swift-notes/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://sametkoyuncu.github.io/swift-notes/ accesskey=h title="Swift Notes (Alt + H)">Swift Notes</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://sametkoyuncu.github.io/notes/ title=Notes><span>Notes</span></a></li><li><a href=https://sametkoyuncu.github.io/cheat-sheets/ title="Cheat Sheets"><span>Cheat Sheets</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://sametkoyuncu.github.io/swift-notes/>Home</a>&nbsp;»&nbsp;<a href=https://sametkoyuncu.github.io/swift-notes/notes/>Notes</a></div><h1 class="post-title entry-hint-parent"></h1><div class=post-meta><span>1 min</span></div></header><div class=post-content><h1 id=how-to-create-a-constants-file>How to create a constants file?<a hidden class=anchor aria-hidden=true href=#how-to-create-a-constants-file>#</a></h1><ul><li><p>Create a new <code>Constants.swift</code> file.</p></li><li><p>Create a Struct inside the <code>Constants.swift</code> file. You name the file <code>Constants</code>, <code>K</code>, or what you want. :)</p></li><li><p>Add <code>static let</code> properties to the Struct. Like below.</p></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>struct</span> <span class=nc>K</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>static</span> <span class=kd>let</span> <span class=nv>cellIdentifier</span> <span class=p>=</span> <span class=s>&#34;ReusableCell&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=kd>static</span> <span class=kd>let</span> <span class=nv>cellNibName</span> <span class=p>=</span> <span class=s>&#34;MessageCell&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=kd>static</span> <span class=kd>let</span> <span class=nv>registerSegue</span> <span class=p>=</span> <span class=s>&#34;RegisterToChat&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=kd>static</span> <span class=kd>let</span> <span class=nv>loginSegue</span> <span class=p>=</span> <span class=s>&#34;LoginToChat&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// If you wish, you can add a group for similar content.</span>
+</span></span><span class=line><span class=cl>    <span class=kd>struct</span> <span class=nc>BrandColors</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>purple</span> <span class=p>=</span> <span class=s>&#34;BrandPurple&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>lightPurple</span> <span class=p>=</span> <span class=s>&#34;BrandLightPurple&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>blue</span> <span class=p>=</span> <span class=s>&#34;BrandBlue&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>lighBlue</span> <span class=p>=</span> <span class=s>&#34;BrandLightBlue&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>struct</span> <span class=nc>FStore</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>collectionName</span> <span class=p>=</span> <span class=s>&#34;messages&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>senderField</span> <span class=p>=</span> <span class=s>&#34;sender&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>bodyField</span> <span class=p>=</span> <span class=s>&#34;body&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>static</span> <span class=kd>let</span> <span class=nv>dateField</span> <span class=p>=</span> <span class=s>&#34;date&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=usage>Usage<a hidden class=anchor aria-hidden=true href=#usage>#</a></h3><ul><li><code>print(K.cellIdentifier)</code></li><li><code>print(K.BrandColors.purple)</code></li></ul></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://sametkoyuncu.github.io/swift-notes/notes/items/combine-and-asyncsequence/><span class=title>« Prev</span><br><span></span>
+</a><a class=next href=https://sametkoyuncu.github.io/swift-notes/notes/items/core-data/><span class=title>Next »</span><br><span></span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://sametkoyuncu.github.io/swift-notes/>Swift Notes</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

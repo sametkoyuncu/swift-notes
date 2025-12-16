@@ -1,0 +1,286 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Swift Notes</title>
+<meta name=keywords content><meta name=description content="Memory and Value Semantics (with version cues)
+ARC basics, retain cycles, copy-on-write, and value vs reference semantics.
+Version Quick Reference
+
+Swift 5.x+: ARC for reference types; standard library uses copy-on-write (CoW) for Array, Dictionary, Set.
+Swift 5.7+: stricter Sendable checking (behind flags) helps surface thread-safety and aliasing issues.
+Swift 6+: strict concurrency checking by default; @MainActor/Sendable diagnostics catch unsafe sharing early.
+
+ARC Essentials
+
+Classes and closures are reference types managed by ARC. Increments on strong references; decrements on release.
+Avoid retain cycles by breaking strong references in one direction (weak or unowned depending on lifetime guarantees).
+
+
+
+1
+2
+3
+4
+5
+6
+
+
+final class Controller {
+    var handler: (() -> Void)?
+    func start() {
+        handler = { [weak self] in self?.doWork() }
+    }
+}
+
+
+weak vs unowned
+
+weak: optional, set to nil automatically when the instance deallocates. Use when the reference may outlive the owner.
+unowned: non-optional, crashes if accessed after deallocation. Use only when lifetimes are strictly tied.
+
+Copy-on-Write (CoW)
+
+Standard collections are value types with CoW: copying is cheap until mutation.
+
+
+
+1
+2
+3
+
+
+var a = [1, 2, 3]
+var b = a            // shares storage
+b.append(4)          // triggers copy; `a` remains [1, 2, 3]
+
+
+
+When building your own CoW types, store reference-backed storage and implement mutating setters that call isKnownUniquelyReferenced.
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+
+struct Buffer {
+    final class Storage {
+        var values: [Int]
+        init(_ values: [Int]) { self.values = values }
+    }
+    private var storage = Storage([])
+
+    private mutating func ensureUnique() {
+        if !isKnownUniquelyReferenced(&amp;storage) {
+            storage = Storage(storage.values)
+        }
+    }
+
+    mutating func append(_ value: Int) {
+        ensureUnique()
+        storage.values.append(value)
+    }
+}
+
+
+Value vs Reference Semantics
+
+Prefer value types (struct/enum) for domain models; they compose better and avoid aliasing bugs.
+Use classes for shared mutable state, UI objects, or when identity matters.
+Document ownership: who creates, who retains, and who mutates.
+
+Concurrency Considerations
+
+CoW reduces accidental sharing across threads, but mutable references inside structs can still race. Mark shared references as Sendable or wrap in actors/locks.
+@MainActor on UI-bound classes clarifies threading; for data models, prefer pure value types or isolated actors.
+
+Testing
+
+Add tests to ensure CoW types copy on mutation (check identity before/after mutation).
+For retain cycles, use weak expectations in tests: create, nil-out strong refs, and assert deallocation occurs.
+"><meta name=author content><link rel=canonical href=https://sametkoyuncu.github.io/swift-notes/notes/items/memory-and-semantics/><link crossorigin=anonymous href=../../../swift-notes/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css integrity="sha256-NDzEgLn/yPBMy+XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as=style><link rel=icon href=https://sametkoyuncu.github.io/swift-notes/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://sametkoyuncu.github.io/swift-notes/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://sametkoyuncu.github.io/swift-notes/favicon-32x32.png><link rel=apple-touch-icon href=https://sametkoyuncu.github.io/swift-notes/apple-touch-icon.png><link rel=mask-icon href=https://sametkoyuncu.github.io/swift-notes/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://sametkoyuncu.github.io/swift-notes/notes/items/memory-and-semantics/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://sametkoyuncu.github.io/swift-notes/notes/items/memory-and-semantics/"><meta property="og:site_name" content="Swift Notes"><meta property="og:title" content="Swift Notes"><meta property="og:description" content="Memory and Value Semantics (with version cues) ARC basics, retain cycles, copy-on-write, and value vs reference semantics.
+Version Quick Reference Swift 5.x+: ARC for reference types; standard library uses copy-on-write (CoW) for Array, Dictionary, Set. Swift 5.7+: stricter Sendable checking (behind flags) helps surface thread-safety and aliasing issues. Swift 6+: strict concurrency checking by default; @MainActor/Sendable diagnostics catch unsafe sharing early. ARC Essentials Classes and closures are reference types managed by ARC. Increments on strong references; decrements on release. Avoid retain cycles by breaking strong references in one direction (weak or unowned depending on lifetime guarantees). 1 2 3 4 5 6 final class Controller { var handler: (() -> Void)? func start() { handler = { [weak self] in self?.doWork() } } } weak vs unowned weak: optional, set to nil automatically when the instance deallocates. Use when the reference may outlive the owner. unowned: non-optional, crashes if accessed after deallocation. Use only when lifetimes are strictly tied. Copy-on-Write (CoW) Standard collections are value types with CoW: copying is cheap until mutation. 1 2 3 var a = [1, 2, 3] var b = a // shares storage b.append(4) // triggers copy; `a` remains [1, 2, 3] When building your own CoW types, store reference-backed storage and implement mutating setters that call isKnownUniquelyReferenced. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 struct Buffer { final class Storage { var values: [Int] init(_ values: [Int]) { self.values = values } } private var storage = Storage([]) private mutating func ensureUnique() { if !isKnownUniquelyReferenced(&amp;storage) { storage = Storage(storage.values) } } mutating func append(_ value: Int) { ensureUnique() storage.values.append(value) } } Value vs Reference Semantics Prefer value types (struct/enum) for domain models; they compose better and avoid aliasing bugs. Use classes for shared mutable state, UI objects, or when identity matters. Document ownership: who creates, who retains, and who mutates. Concurrency Considerations CoW reduces accidental sharing across threads, but mutable references inside structs can still race. Mark shared references as Sendable or wrap in actors/locks. @MainActor on UI-bound classes clarifies threading; for data models, prefer pure value types or isolated actors. Testing Add tests to ensure CoW types copy on mutation (check identity before/after mutation). For retain cycles, use weak expectations in tests: create, nil-out strong refs, and assert deallocation occurs. "><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="notes"><meta name=twitter:card content="summary"><meta name=twitter:title content><meta name=twitter:description content="Memory and Value Semantics (with version cues)
+ARC basics, retain cycles, copy-on-write, and value vs reference semantics.
+Version Quick Reference
+
+Swift 5.x+: ARC for reference types; standard library uses copy-on-write (CoW) for Array, Dictionary, Set.
+Swift 5.7+: stricter Sendable checking (behind flags) helps surface thread-safety and aliasing issues.
+Swift 6+: strict concurrency checking by default; @MainActor/Sendable diagnostics catch unsafe sharing early.
+
+ARC Essentials
+
+Classes and closures are reference types managed by ARC. Increments on strong references; decrements on release.
+Avoid retain cycles by breaking strong references in one direction (weak or unowned depending on lifetime guarantees).
+
+
+
+1
+2
+3
+4
+5
+6
+
+
+final class Controller {
+    var handler: (() -> Void)?
+    func start() {
+        handler = { [weak self] in self?.doWork() }
+    }
+}
+
+
+weak vs unowned
+
+weak: optional, set to nil automatically when the instance deallocates. Use when the reference may outlive the owner.
+unowned: non-optional, crashes if accessed after deallocation. Use only when lifetimes are strictly tied.
+
+Copy-on-Write (CoW)
+
+Standard collections are value types with CoW: copying is cheap until mutation.
+
+
+
+1
+2
+3
+
+
+var a = [1, 2, 3]
+var b = a            // shares storage
+b.append(4)          // triggers copy; `a` remains [1, 2, 3]
+
+
+
+When building your own CoW types, store reference-backed storage and implement mutating setters that call isKnownUniquelyReferenced.
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+
+struct Buffer {
+    final class Storage {
+        var values: [Int]
+        init(_ values: [Int]) { self.values = values }
+    }
+    private var storage = Storage([])
+
+    private mutating func ensureUnique() {
+        if !isKnownUniquelyReferenced(&amp;storage) {
+            storage = Storage(storage.values)
+        }
+    }
+
+    mutating func append(_ value: Int) {
+        ensureUnique()
+        storage.values.append(value)
+    }
+}
+
+
+Value vs Reference Semantics
+
+Prefer value types (struct/enum) for domain models; they compose better and avoid aliasing bugs.
+Use classes for shared mutable state, UI objects, or when identity matters.
+Document ownership: who creates, who retains, and who mutates.
+
+Concurrency Considerations
+
+CoW reduces accidental sharing across threads, but mutable references inside structs can still race. Mark shared references as Sendable or wrap in actors/locks.
+@MainActor on UI-bound classes clarifies threading; for data models, prefer pure value types or isolated actors.
+
+Testing
+
+Add tests to ensure CoW types copy on mutation (check identity before/after mutation).
+For retain cycles, use weak expectations in tests: create, nil-out strong refs, and assert deallocation occurs.
+"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://sametkoyuncu.github.io/swift-notes/notes/"},{"@type":"ListItem","position":2,"name":"","item":"https://sametkoyuncu.github.io/swift-notes/notes/items/memory-and-semantics/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"","name":"","description":"Memory and Value Semantics (with version cues) ARC basics, retain cycles, copy-on-write, and value vs reference semantics.\nVersion Quick Reference Swift 5.x+: ARC for reference types; standard library uses copy-on-write (CoW) for Array, Dictionary, Set. Swift 5.7+: stricter Sendable checking (behind flags) helps surface thread-safety and aliasing issues. Swift 6+: strict concurrency checking by default; @MainActor/Sendable diagnostics catch unsafe sharing early. ARC Essentials Classes and closures are reference types managed by ARC. Increments on strong references; decrements on release. Avoid retain cycles by breaking strong references in one direction (weak or unowned depending on lifetime guarantees). 1 2 3 4 5 6 final class Controller { var handler: (() -\u0026gt; Void)? func start() { handler = { [weak self] in self?.doWork() } } } weak vs unowned weak: optional, set to nil automatically when the instance deallocates. Use when the reference may outlive the owner. unowned: non-optional, crashes if accessed after deallocation. Use only when lifetimes are strictly tied. Copy-on-Write (CoW) Standard collections are value types with CoW: copying is cheap until mutation. 1 2 3 var a = [1, 2, 3] var b = a // shares storage b.append(4) // triggers copy; `a` remains [1, 2, 3] When building your own CoW types, store reference-backed storage and implement mutating setters that call isKnownUniquelyReferenced. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 struct Buffer { final class Storage { var values: [Int] init(_ values: [Int]) { self.values = values } } private var storage = Storage([]) private mutating func ensureUnique() { if !isKnownUniquelyReferenced(\u0026amp;storage) { storage = Storage(storage.values) } } mutating func append(_ value: Int) { ensureUnique() storage.values.append(value) } } Value vs Reference Semantics Prefer value types (struct/enum) for domain models; they compose better and avoid aliasing bugs. Use classes for shared mutable state, UI objects, or when identity matters. Document ownership: who creates, who retains, and who mutates. Concurrency Considerations CoW reduces accidental sharing across threads, but mutable references inside structs can still race. Mark shared references as Sendable or wrap in actors/locks. @MainActor on UI-bound classes clarifies threading; for data models, prefer pure value types or isolated actors. Testing Add tests to ensure CoW types copy on mutation (check identity before/after mutation). For retain cycles, use weak expectations in tests: create, nil-out strong refs, and assert deallocation occurs. ","keywords":[],"articleBody":"Memory and Value Semantics (with version cues) ARC basics, retain cycles, copy-on-write, and value vs reference semantics.\nVersion Quick Reference Swift 5.x+: ARC for reference types; standard library uses copy-on-write (CoW) for Array, Dictionary, Set. Swift 5.7+: stricter Sendable checking (behind flags) helps surface thread-safety and aliasing issues. Swift 6+: strict concurrency checking by default; @MainActor/Sendable diagnostics catch unsafe sharing early. ARC Essentials Classes and closures are reference types managed by ARC. Increments on strong references; decrements on release. Avoid retain cycles by breaking strong references in one direction (weak or unowned depending on lifetime guarantees). 1 2 3 4 5 6 final class Controller { var handler: (() -\u003e Void)? func start() { handler = { [weak self] in self?.doWork() } } } weak vs unowned weak: optional, set to nil automatically when the instance deallocates. Use when the reference may outlive the owner. unowned: non-optional, crashes if accessed after deallocation. Use only when lifetimes are strictly tied. Copy-on-Write (CoW) Standard collections are value types with CoW: copying is cheap until mutation. 1 2 3 var a = [1, 2, 3] var b = a // shares storage b.append(4) // triggers copy; `a` remains [1, 2, 3] When building your own CoW types, store reference-backed storage and implement mutating setters that call isKnownUniquelyReferenced. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 struct Buffer { final class Storage { var values: [Int] init(_ values: [Int]) { self.values = values } } private var storage = Storage([]) private mutating func ensureUnique() { if !isKnownUniquelyReferenced(\u0026storage) { storage = Storage(storage.values) } } mutating func append(_ value: Int) { ensureUnique() storage.values.append(value) } } Value vs Reference Semantics Prefer value types (struct/enum) for domain models; they compose better and avoid aliasing bugs. Use classes for shared mutable state, UI objects, or when identity matters. Document ownership: who creates, who retains, and who mutates. Concurrency Considerations CoW reduces accidental sharing across threads, but mutable references inside structs can still race. Mark shared references as Sendable or wrap in actors/locks. @MainActor on UI-bound classes clarifies threading; for data models, prefer pure value types or isolated actors. Testing Add tests to ensure CoW types copy on mutation (check identity before/after mutation). For retain cycles, use weak expectations in tests: create, nil-out strong refs, and assert deallocation occurs. ","wordCount":"389","inLanguage":"en","datePublished":"0001-01-01T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://sametkoyuncu.github.io/swift-notes/notes/items/memory-and-semantics/"},"publisher":{"@type":"Organization","name":"Swift Notes","logo":{"@type":"ImageObject","url":"https://sametkoyuncu.github.io/swift-notes/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://sametkoyuncu.github.io/swift-notes/ accesskey=h title="Swift Notes (Alt + H)">Swift Notes</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://sametkoyuncu.github.io/notes/ title=Notes><span>Notes</span></a></li><li><a href=https://sametkoyuncu.github.io/cheat-sheets/ title="Cheat Sheets"><span>Cheat Sheets</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://sametkoyuncu.github.io/swift-notes/>Home</a>&nbsp;»&nbsp;<a href=https://sametkoyuncu.github.io/swift-notes/notes/>Notes</a></div><h1 class="post-title entry-hint-parent"></h1><div class=post-meta><span>2 min</span></div></header><div class=post-content><h1 id=memory-and-value-semantics-with-version-cues>Memory and Value Semantics (with version cues)<a hidden class=anchor aria-hidden=true href=#memory-and-value-semantics-with-version-cues>#</a></h1><p>ARC basics, retain cycles, copy-on-write, and value vs reference semantics.</p><h2 id=version-quick-reference>Version Quick Reference<a hidden class=anchor aria-hidden=true href=#version-quick-reference>#</a></h2><ul><li>Swift 5.x+: ARC for reference types; standard library uses copy-on-write (CoW) for <code>Array</code>, <code>Dictionary</code>, <code>Set</code>.</li><li>Swift 5.7+: stricter <code>Sendable</code> checking (behind flags) helps surface thread-safety and aliasing issues.</li><li>Swift 6+: strict concurrency checking by default; <code>@MainActor</code>/<code>Sendable</code> diagnostics catch unsafe sharing early.</li></ul><h2 id=arc-essentials>ARC Essentials<a hidden class=anchor aria-hidden=true href=#arc-essentials>#</a></h2><ul><li>Classes and closures are reference types managed by ARC. Increments on strong references; decrements on release.</li><li>Avoid retain cycles by breaking strong references in one direction (<code>weak</code> or <code>unowned</code> depending on lifetime guarantees).</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kr>final</span> <span class=kd>class</span> <span class=nc>Controller</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>var</span> <span class=nv>handler</span><span class=p>:</span> <span class=p>(()</span> <span class=p>-&gt;</span> <span class=nb>Void</span><span class=p>)?</span>
+</span></span><span class=line><span class=cl>    <span class=kd>func</span> <span class=nf>start</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>handler</span> <span class=p>=</span> <span class=p>{</span> <span class=p>[</span><span class=kr>weak</span> <span class=kc>self</span><span class=p>]</span> <span class=k>in</span> <span class=kc>self</span><span class=p>?.</span><span class=n>doWork</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=weak-vs-unowned><code>weak</code> vs <code>unowned</code><a hidden class=anchor aria-hidden=true href=#weak-vs-unowned>#</a></h2><ul><li><code>weak</code>: optional, set to <code>nil</code> automatically when the instance deallocates. Use when the reference may outlive the owner.</li><li><code>unowned</code>: non-optional, crashes if accessed after deallocation. Use only when lifetimes are strictly tied.</li></ul><h2 id=copy-on-write-cow>Copy-on-Write (CoW)<a hidden class=anchor aria-hidden=true href=#copy-on-write-cow>#</a></h2><ul><li>Standard collections are value types with CoW: copying is cheap until mutation.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>var</span> <span class=nv>a</span> <span class=p>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nv>b</span> <span class=p>=</span> <span class=n>a</span>            <span class=c1>// shares storage</span>
+</span></span><span class=line><span class=cl><span class=n>b</span><span class=p>.</span><span class=n>append</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span>          <span class=c1>// triggers copy; `a` remains [1, 2, 3]</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>When building your own CoW types, store reference-backed storage and implement <code>mutating</code> setters that call <code>isKnownUniquelyReferenced</code>.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>struct</span> <span class=nc>Buffer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>final</span> <span class=kd>class</span> <span class=nc>Storage</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>var</span> <span class=nv>values</span><span class=p>:</span> <span class=p>[</span><span class=nb>Int</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=kd>init</span><span class=p>(</span><span class=kc>_</span> <span class=n>values</span><span class=p>:</span> <span class=p>[</span><span class=nb>Int</span><span class=p>])</span> <span class=p>{</span> <span class=kc>self</span><span class=p>.</span><span class=n>values</span> <span class=p>=</span> <span class=n>values</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>var</span> <span class=nv>storage</span> <span class=p>=</span> <span class=n>Storage</span><span class=p>([])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kr>mutating</span> <span class=kd>func</span> <span class=nf>ensureUnique</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=o>!</span><span class=n>isKnownUniquelyReferenced</span><span class=p>(&amp;</span><span class=n>storage</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>storage</span> <span class=p>=</span> <span class=n>Storage</span><span class=p>(</span><span class=n>storage</span><span class=p>.</span><span class=n>values</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kr>mutating</span> <span class=kd>func</span> <span class=nf>append</span><span class=p>(</span><span class=kc>_</span> <span class=n>value</span><span class=p>:</span> <span class=nb>Int</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>ensureUnique</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=n>storage</span><span class=p>.</span><span class=n>values</span><span class=p>.</span><span class=n>append</span><span class=p>(</span><span class=n>value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=value-vs-reference-semantics>Value vs Reference Semantics<a hidden class=anchor aria-hidden=true href=#value-vs-reference-semantics>#</a></h2><ul><li>Prefer value types (struct/enum) for domain models; they compose better and avoid aliasing bugs.</li><li>Use classes for shared mutable state, UI objects, or when identity matters.</li><li>Document ownership: who creates, who retains, and who mutates.</li></ul><h2 id=concurrency-considerations>Concurrency Considerations<a hidden class=anchor aria-hidden=true href=#concurrency-considerations>#</a></h2><ul><li>CoW reduces accidental sharing across threads, but mutable references inside structs can still race. Mark shared references as <code>Sendable</code> or wrap in actors/locks.</li><li><code>@MainActor</code> on UI-bound classes clarifies threading; for data models, prefer pure value types or isolated actors.</li></ul><h2 id=testing>Testing<a hidden class=anchor aria-hidden=true href=#testing>#</a></h2><ul><li>Add tests to ensure CoW types copy on mutation (check identity before/after mutation).</li><li>For retain cycles, use weak expectations in tests: create, nil-out strong refs, and assert deallocation occurs.</li></ul></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://sametkoyuncu.github.io/swift-notes/notes/items/keypaths-and-pattern-matching/><span class=title>« Prev</span><br><span></span>
+</a><a class=next href=https://sametkoyuncu.github.io/swift-notes/notes/items/observation-macros/><span class=title>Next »</span><br><span></span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://sametkoyuncu.github.io/swift-notes/>Swift Notes</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

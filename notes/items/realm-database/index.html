@@ -1,0 +1,257 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Swift Notes</title>
+<meta name=keywords content><meta name=description content='How to use RealmSwift?
+What is Realm Swift?
+Realm Swift is an easy to use alternative to SQLite and Core Data that makes persisting, querying, and syncing data as simple as working directly with native Swift objects. Visit to RealmSwift page 👆
+Quick Start
+
+Initilation realm - Appdelegate.swift
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // realm db location
+            // print(Realm.Configuration.defaultConfiguration.fileURL)
+        // checking connection
+        do {
+            _ = try Realm()
+        } catch {
+            print("Error initialising new realm, \(error)")
+        }
+        return true
+    }
+
+
+
+
+Define your models like regular Swift classes'><meta name=author content><link rel=canonical href=https://sametkoyuncu.github.io/swift-notes/notes/items/realm-database/><link crossorigin=anonymous href=../../../swift-notes/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css integrity="sha256-NDzEgLn/yPBMy+XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as=style><link rel=icon href=https://sametkoyuncu.github.io/swift-notes/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://sametkoyuncu.github.io/swift-notes/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://sametkoyuncu.github.io/swift-notes/favicon-32x32.png><link rel=apple-touch-icon href=https://sametkoyuncu.github.io/swift-notes/apple-touch-icon.png><link rel=mask-icon href=https://sametkoyuncu.github.io/swift-notes/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://sametkoyuncu.github.io/swift-notes/notes/items/realm-database/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://sametkoyuncu.github.io/swift-notes/notes/items/realm-database/"><meta property="og:site_name" content="Swift Notes"><meta property="og:title" content="Swift Notes"><meta property="og:description" content='How to use RealmSwift? What is Realm Swift? Realm Swift is an easy to use alternative to SQLite and Core Data that makes persisting, querying, and syncing data as simple as working directly with native Swift objects. Visit to RealmSwift page 👆
+Quick Start Initilation realm - Appdelegate.swift 1 2 3 4 5 6 7 8 9 10 11 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { // realm db location // print(Realm.Configuration.defaultConfiguration.fileURL) // checking connection do { _ = try Realm() } catch { print("Error initialising new realm, \(error)") } return true } Define your models like regular Swift classes'><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="notes"><meta name=twitter:card content="summary"><meta name=twitter:title content><meta name=twitter:description content='How to use RealmSwift?
+What is Realm Swift?
+Realm Swift is an easy to use alternative to SQLite and Core Data that makes persisting, querying, and syncing data as simple as working directly with native Swift objects. Visit to RealmSwift page 👆
+Quick Start
+
+Initilation realm - Appdelegate.swift
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // realm db location
+            // print(Realm.Configuration.defaultConfiguration.fileURL)
+        // checking connection
+        do {
+            _ = try Realm()
+        } catch {
+            print("Error initialising new realm, \(error)")
+        }
+        return true
+    }
+
+
+
+
+Define your models like regular Swift classes'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://sametkoyuncu.github.io/swift-notes/notes/"},{"@type":"ListItem","position":2,"name":"","item":"https://sametkoyuncu.github.io/swift-notes/notes/items/realm-database/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"","name":"","description":"How to use RealmSwift? What is Realm Swift? Realm Swift is an easy to use alternative to SQLite and Core Data that makes persisting, querying, and syncing data as simple as working directly with native Swift objects. Visit to RealmSwift page 👆\nQuick Start Initilation realm - Appdelegate.swift 1 2 3 4 5 6 7 8 9 10 11 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -\u0026gt; Bool { // realm db location // print(Realm.Configuration.defaultConfiguration.fileURL) // checking connection do { _ = try Realm() } catch { print(\u0026#34;Error initialising new realm, \\(error)\u0026#34;) } return true } Define your models like regular Swift classes\n","keywords":[],"articleBody":"How to use RealmSwift? What is Realm Swift? Realm Swift is an easy to use alternative to SQLite and Core Data that makes persisting, querying, and syncing data as simple as working directly with native Swift objects. Visit to RealmSwift page 👆\nQuick Start Initilation realm - Appdelegate.swift 1 2 3 4 5 6 7 8 9 10 11 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -\u003e Bool { // realm db location // print(Realm.Configuration.defaultConfiguration.fileURL) // checking connection do { _ = try Realm() } catch { print(\"Error initialising new realm, \\(error)\") } return true } Define your models like regular Swift classes\nTodo App Models: a. We have 2 models, Category and Item. b. The relationship between the 2 models is ‘1-to-n’. c. ‘1’ category have ‘many’ items otherwise ‘1’ item have just ‘1’ category. Category.swiftfile for Category Model 1 2 3 4 5 6 7 import Foundation import RealmSwift class Category: Object { @Persisted var name: String = \"\" @Persisted var items = List\u003cItem\u003e() } Item.swiftfile for Item Model 1 2 3 4 5 6 7 8 9 import Foundation import RealmSwift class Category: Object { @Persisted var title: String = \"\" @Persisted var isDone: Bool = false @Persisted var createdAt: Double = Date().timeIntervalSince1970 var parentCategory = LinkingObjects.init(fromType: Category.self, property: \"items\") } CRUD CREATE Add a new category 1 2 3 4 5 6 7 8 9 10 11 12 13 14 import RealmSwift /* create a new instence from Realm */ let localRealm = try! Realm() /* create a new category */ let newCategory = Category() newCategory.name = newName /* save category to Realm db */ do { try localRealm.write({ localRealm.add(newCategory) }) } catch { print(\"Error saving category, \\(error)\") } Add a new item 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 import RealmSwift let localRealm = try! Realm() /* Coming from category controller */ var selectedCategory: Category? { didSet{ loadItems() } } if let currentCategory = self.selectedCategory { do { try self.localRealm.write({ let newItem = Item() newItem.title = newTitle currentCategory.items.append(newItem) }) } catch { print(\"Error saving new item, \\(error)\") } } READ read categories 1 2 3 /* auto-updating container, we don't need '.append()' method anymore */ var categories: Results\u003cCategory\u003e? categories = localRealm.objects(Category.self) read items for selected categories 1 2 var todoItems: Results\u003cItem\u003e? todoItems = selectedCategory?.items.sorted(byKeyPath: \"title\", ascending: true) UPDATE update item 1 2 3 4 5 6 7 8 9 10 /* indexPath.row = item index. write any index you want. */ if let item = todoItems?[indexPath.row] { do { try localRealm.write({ item.isDone = !item.isDone }) } catch { print(\"Error updating item, \\(error)\") } } DELETE delete item 1 2 3 4 5 6 7 8 9 /* indexPath.row = item index. write any index you want. */ if let item = todoItems?[indexPath.row] { do { try localRealm.write({ localRealm.delete(item) }) } catch { print(\"Error deleting item, \\(error)\") } ","wordCount":"487","inLanguage":"en","datePublished":"0001-01-01T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://sametkoyuncu.github.io/swift-notes/notes/items/realm-database/"},"publisher":{"@type":"Organization","name":"Swift Notes","logo":{"@type":"ImageObject","url":"https://sametkoyuncu.github.io/swift-notes/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://sametkoyuncu.github.io/swift-notes/ accesskey=h title="Swift Notes (Alt + H)">Swift Notes</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://sametkoyuncu.github.io/notes/ title=Notes><span>Notes</span></a></li><li><a href=https://sametkoyuncu.github.io/cheat-sheets/ title="Cheat Sheets"><span>Cheat Sheets</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://sametkoyuncu.github.io/swift-notes/>Home</a>&nbsp;»&nbsp;<a href=https://sametkoyuncu.github.io/swift-notes/notes/>Notes</a></div><h1 class="post-title entry-hint-parent"></h1><div class=post-meta><span>3 min</span></div></header><div class=post-content><h1 id=how-to-use-realmswift>How to use RealmSwift?<a hidden class=anchor aria-hidden=true href=#how-to-use-realmswift>#</a></h1><h3 id=what-is-realm-swift>What is Realm Swift?<a hidden class=anchor aria-hidden=true href=#what-is-realm-swift>#</a></h3><p>Realm Swift is an easy to use alternative to SQLite and Core Data that makes persisting, querying, and syncing data as simple as working directly with native Swift objects. <a href=https://realm.io/realm-swift/>Visit to RealmSwift page 👆</a></p><h2 id=quick-start>Quick Start<a hidden class=anchor aria-hidden=true href=#quick-start>#</a></h2><ul><li>Initilation realm - <code>Appdelegate.swift</code></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>func</span> <span class=nf>application</span><span class=p>(</span><span class=kc>_</span> <span class=n>application</span><span class=p>:</span> <span class=n>UIApplication</span><span class=p>,</span> <span class=n>didFinishLaunchingWithOptions</span> <span class=n>launchOptions</span><span class=p>:</span> <span class=p>[</span><span class=n>UIApplication</span><span class=p>.</span><span class=n>LaunchOptionsKey</span><span class=p>:</span> <span class=nb>Any</span><span class=p>]?)</span> <span class=p>-&gt;</span> <span class=nb>Bool</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// realm db location</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// print(Realm.Configuration.defaultConfiguration.fileURL)</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// checking connection</span>
+</span></span><span class=line><span class=cl>        <span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=kc>_</span> <span class=p>=</span> <span class=k>try</span> <span class=n>Realm</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>catch</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=bp>print</span><span class=p>(</span><span class=s>&#34;Error initialising new realm, </span><span class=si>\(</span><span class=n>error</span><span class=si>)</span><span class=s>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li><p>Define your models like regular Swift classes</p><ol><li>Todo App Models:
+a. We have 2 models, Category and Item.
+b. The relationship between the 2 models is &lsquo;1-to-n&rsquo;.
+c. &lsquo;1&rsquo; category have &lsquo;many&rsquo; items otherwise &lsquo;1&rsquo; item have just &lsquo;1&rsquo; category.</li><li><code>Category.swift</code>file for Category Model</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=kd>import</span> <span class=nc>Foundation</span>
+</span></span><span class=line><span class=cl>  <span class=kd>import</span> <span class=nc>RealmSwift</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>class</span> <span class=nc>Category</span><span class=p>:</span> <span class=n>Object</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>@</span><span class=n>Persisted</span> <span class=kd>var</span> <span class=nv>name</span><span class=p>:</span> <span class=nb>String</span> <span class=p>=</span> <span class=s>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>@</span><span class=n>Persisted</span> <span class=kd>var</span> <span class=nv>items</span> <span class=p>=</span> <span class=n>List</span><span class=p>&lt;</span><span class=n>Item</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><ol start=3><li><code>Item.swift</code>file for Item Model</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=kd>import</span> <span class=nc>Foundation</span>
+</span></span><span class=line><span class=cl>  <span class=kd>import</span> <span class=nc>RealmSwift</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>class</span> <span class=nc>Category</span><span class=p>:</span> <span class=n>Object</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>@</span><span class=n>Persisted</span> <span class=kd>var</span> <span class=nv>title</span><span class=p>:</span> <span class=nb>String</span> <span class=p>=</span> <span class=s>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>@</span><span class=n>Persisted</span> <span class=kd>var</span> <span class=nv>isDone</span><span class=p>:</span> <span class=nb>Bool</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>      <span class=p>@</span><span class=n>Persisted</span> <span class=kd>var</span> <span class=nv>createdAt</span><span class=p>:</span> <span class=nb>Double</span> <span class=p>=</span> <span class=n>Date</span><span class=p>().</span><span class=n>timeIntervalSince1970</span>
+</span></span><span class=line><span class=cl>      <span class=kd>var</span> <span class=nv>parentCategory</span> <span class=p>=</span> <span class=n>LinkingObjects</span><span class=p>.</span><span class=kd>init</span><span class=p>(</span><span class=n>fromType</span><span class=p>:</span> <span class=n>Category</span><span class=p>.</span><span class=kc>self</span><span class=p>,</span> <span class=n>property</span><span class=p>:</span> <span class=s>&#34;items&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=crud>CRUD<a hidden class=anchor aria-hidden=true href=#crud>#</a></h2><h3 id=create>CREATE<a hidden class=anchor aria-hidden=true href=#create>#</a></h3><ul><li>Add a new category</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=kd>import</span> <span class=nc>RealmSwift</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/* create a new instence from Realm */</span>
+</span></span><span class=line><span class=cl>  <span class=kd>let</span> <span class=nv>localRealm</span> <span class=p>=</span> <span class=k>try</span><span class=p>!</span> <span class=n>Realm</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>      <span class=cm>/* create a new category */</span>
+</span></span><span class=line><span class=cl>  <span class=kd>let</span> <span class=nv>newCategory</span> <span class=p>=</span> <span class=n>Category</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=n>newCategory</span><span class=p>.</span><span class=n>name</span> <span class=p>=</span> <span class=n>newName</span>
+</span></span><span class=line><span class=cl>      <span class=cm>/* save category to Realm db */</span>
+</span></span><span class=line><span class=cl>  <span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>try</span> <span class=n>localRealm</span><span class=p>.</span><span class=n>write</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>          <span class=n>localRealm</span><span class=p>.</span><span class=n>add</span><span class=p>(</span><span class=n>newCategory</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>catch</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=bp>print</span><span class=p>(</span><span class=s>&#34;Error saving category, </span><span class=si>\(</span><span class=n>error</span><span class=si>)</span><span class=s>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>Add a new item</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=kd>import</span> <span class=nc>RealmSwift</span>
+</span></span><span class=line><span class=cl>  <span class=kd>let</span> <span class=nv>localRealm</span> <span class=p>=</span> <span class=k>try</span><span class=p>!</span> <span class=n>Realm</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=cm>/* Coming from category controller */</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nv>selectedCategory</span><span class=p>:</span> <span class=n>Category</span><span class=p>?</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=kr>didSet</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=n>loadItems</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=kd>let</span> <span class=nv>currentCategory</span> <span class=p>=</span> <span class=kc>self</span><span class=p>.</span><span class=n>selectedCategory</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=k>try</span> <span class=kc>self</span><span class=p>.</span><span class=n>localRealm</span><span class=p>.</span><span class=n>write</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>              <span class=kd>let</span> <span class=nv>newItem</span> <span class=p>=</span> <span class=n>Item</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>              <span class=n>newItem</span><span class=p>.</span><span class=n>title</span> <span class=p>=</span> <span class=n>newTitle</span>
+</span></span><span class=line><span class=cl>              <span class=n>currentCategory</span><span class=p>.</span><span class=n>items</span><span class=p>.</span><span class=n>append</span><span class=p>(</span><span class=n>newItem</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>          <span class=p>})</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span> <span class=k>catch</span>  <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=bp>print</span><span class=p>(</span><span class=s>&#34;Error saving new item, </span><span class=si>\(</span><span class=n>error</span><span class=si>)</span><span class=s>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=read>READ<a hidden class=anchor aria-hidden=true href=#read>#</a></h3><ul><li>read categories</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=cm>/* auto-updating container, we don&#39;t need &#39;.append()&#39; method anymore */</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nv>categories</span><span class=p>:</span> <span class=n>Results</span><span class=p>&lt;</span><span class=n>Category</span><span class=p>&gt;?</span>
+</span></span><span class=line><span class=cl>  <span class=n>categories</span> <span class=p>=</span> <span class=n>localRealm</span><span class=p>.</span><span class=n>objects</span><span class=p>(</span><span class=n>Category</span><span class=p>.</span><span class=kc>self</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>read items for selected categories</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=kd>var</span> <span class=nv>todoItems</span><span class=p>:</span> <span class=n>Results</span><span class=p>&lt;</span><span class=n>Item</span><span class=p>&gt;?</span>
+</span></span><span class=line><span class=cl>  <span class=n>todoItems</span> <span class=p>=</span> <span class=n>selectedCategory</span><span class=p>?.</span><span class=n>items</span><span class=p>.</span><span class=bp>sorted</span><span class=p>(</span><span class=n>byKeyPath</span><span class=p>:</span> <span class=s>&#34;title&#34;</span><span class=p>,</span> <span class=n>ascending</span><span class=p>:</span> <span class=kc>true</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=update>UPDATE<a hidden class=anchor aria-hidden=true href=#update>#</a></h3><ul><li>update item</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=cm>/* indexPath.row = item index. write any index you want. */</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=kd>let</span> <span class=nv>item</span> <span class=p>=</span> <span class=n>todoItems</span><span class=p>?[</span><span class=n>indexPath</span><span class=p>.</span><span class=n>row</span><span class=p>]</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=k>try</span> <span class=n>localRealm</span><span class=p>.</span><span class=n>write</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>              <span class=n>item</span><span class=p>.</span><span class=n>isDone</span> <span class=p>=</span> <span class=o>!</span><span class=n>item</span><span class=p>.</span><span class=n>isDone</span>
+</span></span><span class=line><span class=cl>          <span class=p>})</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span> <span class=k>catch</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=bp>print</span><span class=p>(</span><span class=s>&#34;Error updating item, </span><span class=si>\(</span><span class=n>error</span><span class=si>)</span><span class=s>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=delete>DELETE<a hidden class=anchor aria-hidden=true href=#delete>#</a></h3><ul><li>delete item</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl>  <span class=cm>/* indexPath.row = item index. write any index you want. */</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=kd>let</span> <span class=nv>item</span> <span class=p>=</span> <span class=n>todoItems</span><span class=p>?[</span><span class=n>indexPath</span><span class=p>.</span><span class=n>row</span><span class=p>]</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>try</span> <span class=n>localRealm</span><span class=p>.</span><span class=n>write</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>          <span class=n>localRealm</span><span class=p>.</span><span class=n>delete</span><span class=p>(</span><span class=n>item</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>catch</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=bp>print</span><span class=p>(</span><span class=s>&#34;Error deleting item, </span><span class=si>\(</span><span class=n>error</span><span class=si>)</span><span class=s>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></li></ul></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://sametkoyuncu.github.io/swift-notes/notes/items/protocols-and-existentials/><span class=title>« Prev</span><br><span></span>
+</a><a class=next href=https://sametkoyuncu.github.io/swift-notes/notes/items/singleton-object/><span class=title>Next »</span><br><span></span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://sametkoyuncu.github.io/swift-notes/>Swift Notes</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

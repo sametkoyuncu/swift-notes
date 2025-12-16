@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Cheat Sheets on Swift Notes</title><link>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/</link><description>Recent content in Cheat Sheets on Swift Notes</description><generator>Hugo -- 0.146.0</generator><language>en-us</language><atom:link href="https://sametkoyuncu.github.io/swift-notes/cheat-sheets/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/dispatch/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/dispatch/</guid><description>&lt;h1 id="dispatch-swift">Dispatch (Swift)&lt;/h1>
+&lt;h2 id="1-what-is-it">1. What is it?&lt;/h2>
+&lt;p>Dispatch is the mechanism that decides &lt;strong>which implementation&lt;/strong> a call will execute (and &lt;strong>when&lt;/strong> that decision is made: compile-time vs runtime). In Swift, dispatch choices directly affect polymorphism, correctness (especially with protocol extensions), and performance.&lt;/p>
+&lt;h2 id="2-what-problem-does-it-solve">2. What problem does it solve?&lt;/h2>
+&lt;ul>
+&lt;li>Enables polymorphism (same call, different behavior) via inheritance or protocols.&lt;/li>
+&lt;li>Balances flexibility vs performance (dynamic lookup vs direct calls).&lt;/li>
+&lt;li>Defines how overrides, protocol conformances, and runtime features (KVO/swizzling) work.&lt;/li>
+&lt;/ul>
+&lt;h2 id="3-types--categories">3. Types / Categories&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Kind&lt;/th>
+&lt;th>Trigger / Where it appears&lt;/th>
+&lt;th>Mechanism&lt;/th>
+&lt;th>Typical cost&lt;/th>
+&lt;th>Notes&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Static dispatch (direct call)&lt;/td>
+&lt;td>&lt;code>struct&lt;/code>/&lt;code>enum&lt;/code>, &lt;code>final&lt;/code> methods/classes, &lt;code>static&lt;/code> functions, many generics&lt;/td>
+&lt;td>Compiler emits a direct call&lt;/td>
+&lt;td>Lowest&lt;/td>
+&lt;td>Most optimizable (inline, specialize)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Virtual dispatch (vtable)&lt;/td>
+&lt;td>&lt;code>class&lt;/code> inheritance + overridable methods&lt;/td>
+&lt;td>vtable lookup&lt;/td>
+&lt;td>Low–medium&lt;/td>
+&lt;td>Enables &lt;code>override&lt;/code> polymorphism&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Protocol dispatch (witness table)&lt;/td>
+&lt;td>Calling protocol &lt;strong>requirements&lt;/strong> through a protocol type&lt;/td>
+&lt;td>witness table lookup&lt;/td>
+&lt;td>Low–medium&lt;/td>
+&lt;td>Key for &lt;code>any Protocol&lt;/code> calls&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Obj-C message dispatch&lt;/td>
+&lt;td>&lt;code>@objc dynamic&lt;/code>, KVC/KVO, swizzling, selectors&lt;/td>
+&lt;td>&lt;code>objc_msgSend&lt;/code>&lt;/td>
+&lt;td>Medium–high&lt;/td>
+&lt;td>Most dynamic, least optimizable&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="4-how-does-it-work-in-swift">4. How does it work in Swift?&lt;/h2>
+&lt;h3 id="quick-decision-tree">Quick decision tree&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Value types (&lt;code>struct&lt;/code>/&lt;code>enum&lt;/code>)&lt;/strong> → usually &lt;strong>static dispatch&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;code>final class&lt;/code> or &lt;code>final func&lt;/code>&lt;/strong> → &lt;strong>static dispatch&lt;/strong> (cannot be overridden)&lt;/li>
+&lt;li>&lt;strong>Non-final &lt;code>class&lt;/code> methods&lt;/strong> (especially overridden) → &lt;strong>vtable&lt;/strong> dispatch&lt;/li>
+&lt;li>&lt;strong>Protocol requirement calls via &lt;code>any Protocol&lt;/code>&lt;/strong> → &lt;strong>witness table&lt;/strong> dispatch&lt;/li>
+&lt;li>&lt;strong>Protocol extension methods&lt;/strong> → &lt;strong>static dispatch&lt;/strong> (common footgun)&lt;/li>
+&lt;li>&lt;strong>Generic &lt;code>T: Protocol&lt;/code>&lt;/strong> → often &lt;strong>specialized&lt;/strong> by the compiler → can become close to &lt;strong>static dispatch&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;code>@objc dynamic&lt;/code>&lt;/strong> → &lt;strong>Objective-C runtime&lt;/strong> dispatch (&lt;code>objc_msgSend&lt;/code>)&lt;/li>
+&lt;/ul>
+&lt;h3 id="why-protocol-extensions-can-surprise-you">Why protocol extensions can surprise you&lt;/h3>
+&lt;ul>
+&lt;li>A method implemented in a &lt;strong>protocol extension&lt;/strong> is not always dispatched through the witness table.&lt;/li>
+&lt;li>If you call it via an &lt;strong>existential&lt;/strong> (&lt;code>let x: any P = ...&lt;/code>), Swift may bind to the extension implementation (static) instead of the conforming type’s method (dynamic through witness table).&lt;/li>
+&lt;/ul>
+&lt;p>Rule of thumb:&lt;/p></description></item><item><title/><link>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/readme/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/readme/</guid><description>&lt;h2 id="cheat-sheets">Cheat Sheets&lt;/h2>
+&lt;p>All cheat sheets follow a strict, shared structure.
+Each document is designed for quick recall rather than full tutorials.&lt;/p>
+&lt;p>If you are adding a new cheat sheet:&lt;/p>
+&lt;ul>
+&lt;li>Use the template in &lt;code>cheat-sheets/_template.md&lt;/code>&lt;/li>
+&lt;li>Keep it under 1–2 screens&lt;/li>
+&lt;li>Focus on &amp;ldquo;why&amp;rdquo; and &amp;ldquo;when&amp;rdquo;, not syntax&lt;/li>
+&lt;/ul></description></item><item><title/><link>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/some-vs-any/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sametkoyuncu.github.io/swift-notes/cheat-sheets/items/some-vs-any/</guid><description>&lt;h1 id="some-vs-any-opaque-vs-existential">some vs any (Opaque vs Existential)&lt;/h1>
+&lt;h2 id="1-what-is-it">1. What is it?&lt;/h2>
+&lt;p>&lt;code>some&lt;/code> defines an &lt;strong>opaque type&lt;/strong>: the concrete type is fixed but hidden from the caller.&lt;br>
+&lt;code>any&lt;/code> defines an &lt;strong>existential type&lt;/strong>: the concrete type is erased and can vary at runtime.&lt;/p>
+&lt;h2 id="2-what-problem-does-it-solve">2. What problem does it solve?&lt;/h2>
+&lt;p>They let APIs abstract over types:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>some&lt;/code>: abstraction &lt;strong>without losing static type information&lt;/strong>&lt;/li>
+&lt;li>&lt;code>any&lt;/code>: abstraction &lt;strong>when heterogeneity or runtime flexibility is required&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;h2 id="3-types--categories">3. Types / Categories&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>Opaque types (&lt;code>some P&lt;/code>)&lt;/strong>
+&lt;ul>
+&lt;li>Compile-time concrete type&lt;/li>
+&lt;li>Single underlying type per declaration&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Existential types (&lt;code>any P&lt;/code>)&lt;/strong>
+&lt;ul>
+&lt;li>Runtime type-erased container&lt;/li>
+&lt;li>Can hold multiple concrete types over time&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="4-how-does-it-work-in-swift">4. How does it work in Swift?&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>some P&lt;/code>
+&lt;ul>
+&lt;li>Compiler generates a hidden concrete generic&lt;/li>
+&lt;li>Uses &lt;strong>static dispatch&lt;/strong>, specialization, and inlining&lt;/li>
+&lt;li>Backed by vtables/witness tables known at compile time&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>any P&lt;/code>
+&lt;ul>
+&lt;li>Stored as an &lt;strong>existential container&lt;/strong>&lt;/li>
+&lt;li>Uses &lt;strong>dynamic dispatch&lt;/strong> via witness tables&lt;/li>
+&lt;li>May allocate (inline buffer vs heap) depending on size&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="5-dangerous-corners--footguns">5. Dangerous corners / Footguns&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>some&lt;/code> cannot return different concrete types across branches&lt;/li>
+&lt;li>&lt;code>any&lt;/code> loses associated type and &lt;code>Self&lt;/code> information&lt;/li>
+&lt;li>Existentials inhibit specialization and inlining&lt;/li>
+&lt;li>Existential boxing can cause unexpected heap allocations&lt;/li>
+&lt;li>Mixing &lt;code>any P&lt;/code> with generics often causes silent performance cliffs&lt;/li>
+&lt;/ul>
+&lt;h2 id="6-when-should-i-use-which">6. When should I use which?&lt;/h2>
+&lt;ul>
+&lt;li>Use &lt;code>some&lt;/code> when:
+&lt;ul>
+&lt;li>You control the implementation&lt;/li>
+&lt;li>You want abstraction &lt;strong>and&lt;/strong> performance&lt;/li>
+&lt;li>The concrete type is stable per API&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Use &lt;code>any&lt;/code> when:
+&lt;ul>
+&lt;li>You need heterogenous collections&lt;/li>
+&lt;li>The concrete type varies at runtime&lt;/li>
+&lt;li>API boundaries require type erasure&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Prefer generics over &lt;code>any&lt;/code> when the caller can benefit from specialization&lt;/li>
+&lt;/ul>
+&lt;h2 id="7-30-second-summary">7. 30-second summary&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>some&lt;/code> = hidden concrete type, fast, statically dispatched&lt;/li>
+&lt;li>&lt;code>any&lt;/code> = type-erased container, flexible, dynamically dispatched&lt;/li>
+&lt;li>&lt;code>some&lt;/code> preserves optimization; &lt;code>any&lt;/code> trades performance for flexibility&lt;/li>
+&lt;li>Default to &lt;code>some&lt;/code> (or generics); reach for &lt;code>any&lt;/code> only when necessary&lt;/li>
+&lt;/ul></description></item></channel></rss>

@@ -1,0 +1,248 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Swift Notes</title>
+<meta name=keywords content><meta name=description content="Combine and AsyncSequence (with version cues)
+How to bridge publishers to async/await, manage backpressure, and handle cancellation.
+Version Quick Reference
+
+iOS 13 / Swift 5.1: Combine introduced with Publisher, operators, and schedulers.
+iOS 15 / Swift 5.5: AsyncSequence and Publisher.values bridge Combine to async/await.
+Swift 6+: stricter concurrency checking surfaces Sendable and actor-isolation issues in custom publishers/operators.
+
+Bridging Combine to Async/Await
+
+Use publisher.values (iOS 15+) to consume a publisher as an AsyncSequence.
+
+
+
+1
+2
+3
+
+
+for await value in publisher.values {
+    handle(value)
+}
+
+
+
+For single values, prefer try await publisher.first(where:) or async variants instead of promise-style bridges.
+
+Cancellation and Backpressure
+
+Cancellation in Combine maps to Task cancellation in async bridges. Respect Task.isCancelled when producing values manually.
+Backpressure is automatic for many operators, but custom Publisher implementations should consider demand. When bridging to async, the consumer naturally pulls values; avoid buffering unboundedly.
+
+Error Handling
+
+Combine uses Failure associated type; Never means no errors. When bridging, failures throw in async contexts.
+
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+do {
+    for try await value in fallible.values {
+        handle(value)
+    }
+} catch {
+    // handle Combine Failure here
+}
+
+
+Common Patterns
+
+UI: map publishers to async functions in SwiftUI task {} blocks; cancel tasks on disappear.
+Testing: use AsyncStream to feed deterministic values into async code, or use TestScheduler for pure Combine pipelines.
+
+Replacing Combine with AsyncSequence
+
+For new code on iOS 15+, prefer AsyncSequence for simpler async streams.
+Use AsyncStream/AsyncThrowingStream to wrap callback-based APIs.
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+func notifications() -> AsyncStream<Notification> {
+    AsyncStream { continuation in
+        let token = NotificationCenter.default.addObserver(forName: .foo, object: nil, queue: nil) { note in
+            continuation.yield(note)
+        }
+        continuation.onTermination = { _ in
+            NotificationCenter.default.removeObserver(token)
+        }
+    }
+}
+
+
+Concurrency Safety
+
+Ensure custom publishers and subjects are Sendable if they cross actors/threads. Consider using actors to guard mutable state in publishers you own.
+
+Testing
+
+For Combine: use XCTest with expectations or TestScheduler; assert output sequences and completion.
+For async bridges: write async tests with for await and verify cancellation by cancelling the parent Task.
+"><meta name=author content><link rel=canonical href=https://sametkoyuncu.github.io/swift-notes/notes/items/combine-and-asyncsequence/><link crossorigin=anonymous href=../../../swift-notes/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css integrity="sha256-NDzEgLn/yPBMy+XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as=style><link rel=icon href=https://sametkoyuncu.github.io/swift-notes/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://sametkoyuncu.github.io/swift-notes/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://sametkoyuncu.github.io/swift-notes/favicon-32x32.png><link rel=apple-touch-icon href=https://sametkoyuncu.github.io/swift-notes/apple-touch-icon.png><link rel=mask-icon href=https://sametkoyuncu.github.io/swift-notes/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://sametkoyuncu.github.io/swift-notes/notes/items/combine-and-asyncsequence/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://sametkoyuncu.github.io/swift-notes/notes/items/combine-and-asyncsequence/"><meta property="og:site_name" content="Swift Notes"><meta property="og:title" content="Swift Notes"><meta property="og:description" content="Combine and AsyncSequence (with version cues) How to bridge publishers to async/await, manage backpressure, and handle cancellation.
+Version Quick Reference iOS 13 / Swift 5.1: Combine introduced with Publisher, operators, and schedulers. iOS 15 / Swift 5.5: AsyncSequence and Publisher.values bridge Combine to async/await. Swift 6+: stricter concurrency checking surfaces Sendable and actor-isolation issues in custom publishers/operators. Bridging Combine to Async/Await Use publisher.values (iOS 15+) to consume a publisher as an AsyncSequence. 1 2 3 for await value in publisher.values { handle(value) } For single values, prefer try await publisher.first(where:) or async variants instead of promise-style bridges. Cancellation and Backpressure Cancellation in Combine maps to Task cancellation in async bridges. Respect Task.isCancelled when producing values manually. Backpressure is automatic for many operators, but custom Publisher implementations should consider demand. When bridging to async, the consumer naturally pulls values; avoid buffering unboundedly. Error Handling Combine uses Failure associated type; Never means no errors. When bridging, failures throw in async contexts. 1 2 3 4 5 6 7 do { for try await value in fallible.values { handle(value) } } catch { // handle Combine Failure here } Common Patterns UI: map publishers to async functions in SwiftUI task {} blocks; cancel tasks on disappear. Testing: use AsyncStream to feed deterministic values into async code, or use TestScheduler for pure Combine pipelines. Replacing Combine with AsyncSequence For new code on iOS 15+, prefer AsyncSequence for simpler async streams. Use AsyncStream/AsyncThrowingStream to wrap callback-based APIs. 1 2 3 4 5 6 7 8 9 10 func notifications() -> AsyncStream<Notification> { AsyncStream { continuation in let token = NotificationCenter.default.addObserver(forName: .foo, object: nil, queue: nil) { note in continuation.yield(note) } continuation.onTermination = { _ in NotificationCenter.default.removeObserver(token) } } } Concurrency Safety Ensure custom publishers and subjects are Sendable if they cross actors/threads. Consider using actors to guard mutable state in publishers you own. Testing For Combine: use XCTest with expectations or TestScheduler; assert output sequences and completion. For async bridges: write async tests with for await and verify cancellation by cancelling the parent Task. "><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="notes"><meta name=twitter:card content="summary"><meta name=twitter:title content><meta name=twitter:description content="Combine and AsyncSequence (with version cues)
+How to bridge publishers to async/await, manage backpressure, and handle cancellation.
+Version Quick Reference
+
+iOS 13 / Swift 5.1: Combine introduced with Publisher, operators, and schedulers.
+iOS 15 / Swift 5.5: AsyncSequence and Publisher.values bridge Combine to async/await.
+Swift 6+: stricter concurrency checking surfaces Sendable and actor-isolation issues in custom publishers/operators.
+
+Bridging Combine to Async/Await
+
+Use publisher.values (iOS 15+) to consume a publisher as an AsyncSequence.
+
+
+
+1
+2
+3
+
+
+for await value in publisher.values {
+    handle(value)
+}
+
+
+
+For single values, prefer try await publisher.first(where:) or async variants instead of promise-style bridges.
+
+Cancellation and Backpressure
+
+Cancellation in Combine maps to Task cancellation in async bridges. Respect Task.isCancelled when producing values manually.
+Backpressure is automatic for many operators, but custom Publisher implementations should consider demand. When bridging to async, the consumer naturally pulls values; avoid buffering unboundedly.
+
+Error Handling
+
+Combine uses Failure associated type; Never means no errors. When bridging, failures throw in async contexts.
+
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+do {
+    for try await value in fallible.values {
+        handle(value)
+    }
+} catch {
+    // handle Combine Failure here
+}
+
+
+Common Patterns
+
+UI: map publishers to async functions in SwiftUI task {} blocks; cancel tasks on disappear.
+Testing: use AsyncStream to feed deterministic values into async code, or use TestScheduler for pure Combine pipelines.
+
+Replacing Combine with AsyncSequence
+
+For new code on iOS 15+, prefer AsyncSequence for simpler async streams.
+Use AsyncStream/AsyncThrowingStream to wrap callback-based APIs.
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+
+
+func notifications() -> AsyncStream<Notification> {
+    AsyncStream { continuation in
+        let token = NotificationCenter.default.addObserver(forName: .foo, object: nil, queue: nil) { note in
+            continuation.yield(note)
+        }
+        continuation.onTermination = { _ in
+            NotificationCenter.default.removeObserver(token)
+        }
+    }
+}
+
+
+Concurrency Safety
+
+Ensure custom publishers and subjects are Sendable if they cross actors/threads. Consider using actors to guard mutable state in publishers you own.
+
+Testing
+
+For Combine: use XCTest with expectations or TestScheduler; assert output sequences and completion.
+For async bridges: write async tests with for await and verify cancellation by cancelling the parent Task.
+"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://sametkoyuncu.github.io/swift-notes/notes/"},{"@type":"ListItem","position":2,"name":"","item":"https://sametkoyuncu.github.io/swift-notes/notes/items/combine-and-asyncsequence/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"","name":"","description":"Combine and AsyncSequence (with version cues) How to bridge publishers to async/await, manage backpressure, and handle cancellation.\nVersion Quick Reference iOS 13 / Swift 5.1: Combine introduced with Publisher, operators, and schedulers. iOS 15 / Swift 5.5: AsyncSequence and Publisher.values bridge Combine to async/await. Swift 6+: stricter concurrency checking surfaces Sendable and actor-isolation issues in custom publishers/operators. Bridging Combine to Async/Await Use publisher.values (iOS 15+) to consume a publisher as an AsyncSequence. 1 2 3 for await value in publisher.values { handle(value) } For single values, prefer try await publisher.first(where:) or async variants instead of promise-style bridges. Cancellation and Backpressure Cancellation in Combine maps to Task cancellation in async bridges. Respect Task.isCancelled when producing values manually. Backpressure is automatic for many operators, but custom Publisher implementations should consider demand. When bridging to async, the consumer naturally pulls values; avoid buffering unboundedly. Error Handling Combine uses Failure associated type; Never means no errors. When bridging, failures throw in async contexts. 1 2 3 4 5 6 7 do { for try await value in fallible.values { handle(value) } } catch { // handle Combine Failure here } Common Patterns UI: map publishers to async functions in SwiftUI task {} blocks; cancel tasks on disappear. Testing: use AsyncStream to feed deterministic values into async code, or use TestScheduler for pure Combine pipelines. Replacing Combine with AsyncSequence For new code on iOS 15+, prefer AsyncSequence for simpler async streams. Use AsyncStream/AsyncThrowingStream to wrap callback-based APIs. 1 2 3 4 5 6 7 8 9 10 func notifications() -\u0026gt; AsyncStream\u0026lt;Notification\u0026gt; { AsyncStream { continuation in let token = NotificationCenter.default.addObserver(forName: .foo, object: nil, queue: nil) { note in continuation.yield(note) } continuation.onTermination = { _ in NotificationCenter.default.removeObserver(token) } } } Concurrency Safety Ensure custom publishers and subjects are Sendable if they cross actors/threads. Consider using actors to guard mutable state in publishers you own. Testing For Combine: use XCTest with expectations or TestScheduler; assert output sequences and completion. For async bridges: write async tests with for await and verify cancellation by cancelling the parent Task. ","keywords":[],"articleBody":"Combine and AsyncSequence (with version cues) How to bridge publishers to async/await, manage backpressure, and handle cancellation.\nVersion Quick Reference iOS 13 / Swift 5.1: Combine introduced with Publisher, operators, and schedulers. iOS 15 / Swift 5.5: AsyncSequence and Publisher.values bridge Combine to async/await. Swift 6+: stricter concurrency checking surfaces Sendable and actor-isolation issues in custom publishers/operators. Bridging Combine to Async/Await Use publisher.values (iOS 15+) to consume a publisher as an AsyncSequence. 1 2 3 for await value in publisher.values { handle(value) } For single values, prefer try await publisher.first(where:) or async variants instead of promise-style bridges. Cancellation and Backpressure Cancellation in Combine maps to Task cancellation in async bridges. Respect Task.isCancelled when producing values manually. Backpressure is automatic for many operators, but custom Publisher implementations should consider demand. When bridging to async, the consumer naturally pulls values; avoid buffering unboundedly. Error Handling Combine uses Failure associated type; Never means no errors. When bridging, failures throw in async contexts. 1 2 3 4 5 6 7 do { for try await value in fallible.values { handle(value) } } catch { // handle Combine Failure here } Common Patterns UI: map publishers to async functions in SwiftUI task {} blocks; cancel tasks on disappear. Testing: use AsyncStream to feed deterministic values into async code, or use TestScheduler for pure Combine pipelines. Replacing Combine with AsyncSequence For new code on iOS 15+, prefer AsyncSequence for simpler async streams. Use AsyncStream/AsyncThrowingStream to wrap callback-based APIs. 1 2 3 4 5 6 7 8 9 10 func notifications() -\u003e AsyncStream\u003cNotification\u003e { AsyncStream { continuation in let token = NotificationCenter.default.addObserver(forName: .foo, object: nil, queue: nil) { note in continuation.yield(note) } continuation.onTermination = { _ in NotificationCenter.default.removeObserver(token) } } } Concurrency Safety Ensure custom publishers and subjects are Sendable if they cross actors/threads. Consider using actors to guard mutable state in publishers you own. Testing For Combine: use XCTest with expectations or TestScheduler; assert output sequences and completion. For async bridges: write async tests with for await and verify cancellation by cancelling the parent Task. ","wordCount":"339","inLanguage":"en","datePublished":"0001-01-01T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://sametkoyuncu.github.io/swift-notes/notes/items/combine-and-asyncsequence/"},"publisher":{"@type":"Organization","name":"Swift Notes","logo":{"@type":"ImageObject","url":"https://sametkoyuncu.github.io/swift-notes/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://sametkoyuncu.github.io/swift-notes/ accesskey=h title="Swift Notes (Alt + H)">Swift Notes</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://sametkoyuncu.github.io/notes/ title=Notes><span>Notes</span></a></li><li><a href=https://sametkoyuncu.github.io/cheat-sheets/ title="Cheat Sheets"><span>Cheat Sheets</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://sametkoyuncu.github.io/swift-notes/>Home</a>&nbsp;»&nbsp;<a href=https://sametkoyuncu.github.io/swift-notes/notes/>Notes</a></div><h1 class="post-title entry-hint-parent"></h1><div class=post-meta><span>2 min</span></div></header><div class=post-content><h1 id=combine-and-asyncsequence-with-version-cues>Combine and AsyncSequence (with version cues)<a hidden class=anchor aria-hidden=true href=#combine-and-asyncsequence-with-version-cues>#</a></h1><p>How to bridge publishers to async/await, manage backpressure, and handle cancellation.</p><h2 id=version-quick-reference>Version Quick Reference<a hidden class=anchor aria-hidden=true href=#version-quick-reference>#</a></h2><ul><li>iOS 13 / Swift 5.1: Combine introduced with <code>Publisher</code>, operators, and schedulers.</li><li>iOS 15 / Swift 5.5: <code>AsyncSequence</code> and <code>Publisher.values</code> bridge Combine to async/await.</li><li>Swift 6+: stricter concurrency checking surfaces <code>Sendable</code> and actor-isolation issues in custom publishers/operators.</li></ul><h2 id=bridging-combine-to-asyncawait>Bridging Combine to Async/Await<a hidden class=anchor aria-hidden=true href=#bridging-combine-to-asyncawait>#</a></h2><ul><li>Use <code>publisher.values</code> (iOS 15+) to consume a publisher as an <code>AsyncSequence</code>.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=k>for</span> <span class=n>await</span> <span class=n>value</span> <span class=k>in</span> <span class=n>publisher</span><span class=p>.</span><span class=n>values</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>handle</span><span class=p>(</span><span class=n>value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>For single values, prefer <code>try await publisher.first(where:)</code> or <code>async</code> variants instead of promise-style bridges.</li></ul><h2 id=cancellation-and-backpressure>Cancellation and Backpressure<a hidden class=anchor aria-hidden=true href=#cancellation-and-backpressure>#</a></h2><ul><li>Cancellation in Combine maps to Task cancellation in async bridges. Respect <code>Task.isCancelled</code> when producing values manually.</li><li>Backpressure is automatic for many operators, but custom <code>Publisher</code> implementations should consider demand. When bridging to async, the consumer naturally pulls values; avoid buffering unboundedly.</li></ul><h2 id=error-handling>Error Handling<a hidden class=anchor aria-hidden=true href=#error-handling>#</a></h2><ul><li>Combine uses <code>Failure</code> associated type; <code>Never</code> means no errors. When bridging, failures throw in async contexts.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=k>try</span> <span class=n>await</span> <span class=n>value</span> <span class=k>in</span> <span class=n>fallible</span><span class=p>.</span><span class=n>values</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>handle</span><span class=p>(</span><span class=n>value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>catch</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// handle Combine Failure here</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=common-patterns>Common Patterns<a hidden class=anchor aria-hidden=true href=#common-patterns>#</a></h2><ul><li>UI: map publishers to <code>async</code> functions in SwiftUI <code>task {}</code> blocks; cancel tasks on disappear.</li><li>Testing: use <code>AsyncStream</code> to feed deterministic values into async code, or use TestScheduler for pure Combine pipelines.</li></ul><h2 id=replacing-combine-with-asyncsequence>Replacing Combine with AsyncSequence<a hidden class=anchor aria-hidden=true href=#replacing-combine-with-asyncsequence>#</a></h2><ul><li>For new code on iOS 15+, prefer <code>AsyncSequence</code> for simpler async streams.</li><li>Use <code>AsyncStream</code>/<code>AsyncThrowingStream</code> to wrap callback-based APIs.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>func</span> <span class=nf>notifications</span><span class=p>()</span> <span class=p>-&gt;</span> <span class=n>AsyncStream</span><span class=p>&lt;</span><span class=n>Notification</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>AsyncStream</span> <span class=p>{</span> <span class=n>continuation</span> <span class=k>in</span>
+</span></span><span class=line><span class=cl>        <span class=kd>let</span> <span class=nv>token</span> <span class=p>=</span> <span class=n>NotificationCenter</span><span class=p>.</span><span class=k>default</span><span class=p>.</span><span class=n>addObserver</span><span class=p>(</span><span class=n>forName</span><span class=p>:</span> <span class=p>.</span><span class=n>foo</span><span class=p>,</span> <span class=n>object</span><span class=p>:</span> <span class=kc>nil</span><span class=p>,</span> <span class=n>queue</span><span class=p>:</span> <span class=kc>nil</span><span class=p>)</span> <span class=p>{</span> <span class=n>note</span> <span class=k>in</span>
+</span></span><span class=line><span class=cl>            <span class=n>continuation</span><span class=p>.</span><span class=n>yield</span><span class=p>(</span><span class=n>note</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>continuation</span><span class=p>.</span><span class=n>onTermination</span> <span class=p>=</span> <span class=p>{</span> <span class=kc>_</span> <span class=k>in</span>
+</span></span><span class=line><span class=cl>            <span class=n>NotificationCenter</span><span class=p>.</span><span class=k>default</span><span class=p>.</span><span class=n>removeObserver</span><span class=p>(</span><span class=n>token</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=concurrency-safety>Concurrency Safety<a hidden class=anchor aria-hidden=true href=#concurrency-safety>#</a></h2><ul><li>Ensure custom publishers and subjects are <code>Sendable</code> if they cross actors/threads. Consider using actors to guard mutable state in publishers you own.</li></ul><h2 id=testing>Testing<a hidden class=anchor aria-hidden=true href=#testing>#</a></h2><ul><li>For Combine: use <code>XCTest</code> with expectations or TestScheduler; assert output sequences and completion.</li><li>For async bridges: write async tests with <code>for await</code> and verify cancellation by cancelling the parent <code>Task</code>.</li></ul></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://sametkoyuncu.github.io/swift-notes/notes/items/collections-and-algorithms/><span class=title>« Prev</span><br><span></span>
+</a><a class=next href=https://sametkoyuncu.github.io/swift-notes/notes/items/constants-file/><span class=title>Next »</span><br><span></span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://sametkoyuncu.github.io/swift-notes/>Swift Notes</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

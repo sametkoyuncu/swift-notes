@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://sametkoyuncu.github.io/swift-notes/sitemap.xml

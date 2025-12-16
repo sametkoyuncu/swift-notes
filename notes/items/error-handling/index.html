@@ -1,0 +1,346 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Swift Notes</title>
+<meta name=keywords content><meta name=description content='Error Handling in Swift (with version cues)
+Practical patterns for throwing, typed throws, and interop.
+Version Quick Reference
+
+Swift 5.x: untyped throws, rethrows, Result, try?, try!.
+Swift 6+: typed throws (throws(SomeError)) available by default; strict concurrency checking may surface error-sendability issues.
+
+Basics
+
+Use throws for recoverable issues; keep errors small and domain-specific.
+Prefer enums conforming to Error; include minimal context (payloads or userInfo when bridging).
+
+
+
+1
+2
+3
+4
+5
+6
+
+
+enum NetworkError: Error { case offline, timeout(seconds: Int) }
+
+func fetch() throws -> Data {
+    guard isOnline else { throw NetworkError.offline }
+    return Data()
+}
+
+
+Typed Throws (Swift 6+)
+
+Specify the exact error type to enable exhaustive handling at call sites.
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+
+
+enum LoginError: Error { case offline, invalidCredentials }
+
+func login(email: String, password: String) throws(LoginError) -> Session { ... }
+
+do {
+    _ = try login(email: "a@b.com", password: "pw")
+} catch LoginError.offline {
+    // precise recovery
+} catch {
+    // optional fallback if bridging from ObjC or unexpected errors arise
+}
+
+
+Rethrows
+
+Use rethrows when a function only throws if its function parameter throws—helpful for higher-order functions.
+
+
+
+1
+2
+3
+
+
+func mapOrThrow<T>(_ values: [String], transform: (String) throws -> T) rethrows -> [T] {
+    try values.map(transform)
+}
+
+
+Result vs throws
+
+throws is ergonomic inside async/await and linear code.
+Result is useful for storing or combining errors, or when API shape must be synchronous but errorful.
+
+
+
+1
+
+
+let outcome: Result<Data, NetworkError> = Result { try fetch() }
+
+
+Async Error Propagation
+
+async throws pairs naturally; prefer this over callback-based completion handlers.
+For cancellation, treat CancellationError distinctly to avoid masking user intent.
+
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+func loadProfile() async throws -> Profile { ... }
+
+do {
+    _ = try await loadProfile()
+} catch is CancellationError {
+    // respect user cancellation
+}
+
+
+Bridging and Interop
+
+Objective-C NSError maps to Swift Error; annotate ObjC with NS_SWIFT_NAME and NSError ** patterns.
+When exposing Swift APIs to ObjC, typed throws are not visible; design ObjC-friendly overloads if needed.
+
+Testing Errors
+
+Use XCTAssertThrowsError with pattern matching to assert specific cases.
+For typed throws, tests become clearer and more exhaustive.
+
+
+
+1
+2
+3
+
+
+XCTAssertThrowsError(try login(email: "", password: "")) { error in
+    XCTAssertEqual(error as? LoginError, .invalidCredentials)
+}
+
+
+'><meta name=author content><link rel=canonical href=https://sametkoyuncu.github.io/swift-notes/notes/items/error-handling/><link crossorigin=anonymous href=../../../swift-notes/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css integrity="sha256-NDzEgLn/yPBMy+XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as=style><link rel=icon href=https://sametkoyuncu.github.io/swift-notes/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://sametkoyuncu.github.io/swift-notes/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://sametkoyuncu.github.io/swift-notes/favicon-32x32.png><link rel=apple-touch-icon href=https://sametkoyuncu.github.io/swift-notes/apple-touch-icon.png><link rel=mask-icon href=https://sametkoyuncu.github.io/swift-notes/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://sametkoyuncu.github.io/swift-notes/notes/items/error-handling/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://sametkoyuncu.github.io/swift-notes/notes/items/error-handling/"><meta property="og:site_name" content="Swift Notes"><meta property="og:title" content="Swift Notes"><meta property="og:description" content='Error Handling in Swift (with version cues) Practical patterns for throwing, typed throws, and interop.
+Version Quick Reference Swift 5.x: untyped throws, rethrows, Result, try?, try!. Swift 6+: typed throws (throws(SomeError)) available by default; strict concurrency checking may surface error-sendability issues. Basics Use throws for recoverable issues; keep errors small and domain-specific. Prefer enums conforming to Error; include minimal context (payloads or userInfo when bridging). 1 2 3 4 5 6 enum NetworkError: Error { case offline, timeout(seconds: Int) } func fetch() throws -> Data { guard isOnline else { throw NetworkError.offline } return Data() } Typed Throws (Swift 6+) Specify the exact error type to enable exhaustive handling at call sites. 1 2 3 4 5 6 7 8 9 10 11 enum LoginError: Error { case offline, invalidCredentials } func login(email: String, password: String) throws(LoginError) -> Session { ... } do { _ = try login(email: "a@b.com", password: "pw") } catch LoginError.offline { // precise recovery } catch { // optional fallback if bridging from ObjC or unexpected errors arise } Rethrows Use rethrows when a function only throws if its function parameter throws—helpful for higher-order functions. 1 2 3 func mapOrThrow<T>(_ values: [String], transform: (String) throws -> T) rethrows -> [T] { try values.map(transform) } Result vs throws throws is ergonomic inside async/await and linear code. Result is useful for storing or combining errors, or when API shape must be synchronous but errorful. 1 let outcome: Result<Data, NetworkError> = Result { try fetch() } Async Error Propagation async throws pairs naturally; prefer this over callback-based completion handlers. For cancellation, treat CancellationError distinctly to avoid masking user intent. 1 2 3 4 5 6 7 func loadProfile() async throws -> Profile { ... } do { _ = try await loadProfile() } catch is CancellationError { // respect user cancellation } Bridging and Interop Objective-C NSError maps to Swift Error; annotate ObjC with NS_SWIFT_NAME and NSError ** patterns. When exposing Swift APIs to ObjC, typed throws are not visible; design ObjC-friendly overloads if needed. Testing Errors Use XCTAssertThrowsError with pattern matching to assert specific cases. For typed throws, tests become clearer and more exhaustive. 1 2 3 XCTAssertThrowsError(try login(email: "", password: "")) { error in XCTAssertEqual(error as? LoginError, .invalidCredentials) } '><meta property="og:locale" content="en-us"><meta property="og:type" content="article"><meta property="article:section" content="notes"><meta name=twitter:card content="summary"><meta name=twitter:title content><meta name=twitter:description content='Error Handling in Swift (with version cues)
+Practical patterns for throwing, typed throws, and interop.
+Version Quick Reference
+
+Swift 5.x: untyped throws, rethrows, Result, try?, try!.
+Swift 6+: typed throws (throws(SomeError)) available by default; strict concurrency checking may surface error-sendability issues.
+
+Basics
+
+Use throws for recoverable issues; keep errors small and domain-specific.
+Prefer enums conforming to Error; include minimal context (payloads or userInfo when bridging).
+
+
+
+1
+2
+3
+4
+5
+6
+
+
+enum NetworkError: Error { case offline, timeout(seconds: Int) }
+
+func fetch() throws -> Data {
+    guard isOnline else { throw NetworkError.offline }
+    return Data()
+}
+
+
+Typed Throws (Swift 6+)
+
+Specify the exact error type to enable exhaustive handling at call sites.
+
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+
+
+enum LoginError: Error { case offline, invalidCredentials }
+
+func login(email: String, password: String) throws(LoginError) -> Session { ... }
+
+do {
+    _ = try login(email: "a@b.com", password: "pw")
+} catch LoginError.offline {
+    // precise recovery
+} catch {
+    // optional fallback if bridging from ObjC or unexpected errors arise
+}
+
+
+Rethrows
+
+Use rethrows when a function only throws if its function parameter throws—helpful for higher-order functions.
+
+
+
+1
+2
+3
+
+
+func mapOrThrow<T>(_ values: [String], transform: (String) throws -> T) rethrows -> [T] {
+    try values.map(transform)
+}
+
+
+Result vs throws
+
+throws is ergonomic inside async/await and linear code.
+Result is useful for storing or combining errors, or when API shape must be synchronous but errorful.
+
+
+
+1
+
+
+let outcome: Result<Data, NetworkError> = Result { try fetch() }
+
+
+Async Error Propagation
+
+async throws pairs naturally; prefer this over callback-based completion handlers.
+For cancellation, treat CancellationError distinctly to avoid masking user intent.
+
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+func loadProfile() async throws -> Profile { ... }
+
+do {
+    _ = try await loadProfile()
+} catch is CancellationError {
+    // respect user cancellation
+}
+
+
+Bridging and Interop
+
+Objective-C NSError maps to Swift Error; annotate ObjC with NS_SWIFT_NAME and NSError ** patterns.
+When exposing Swift APIs to ObjC, typed throws are not visible; design ObjC-friendly overloads if needed.
+
+Testing Errors
+
+Use XCTAssertThrowsError with pattern matching to assert specific cases.
+For typed throws, tests become clearer and more exhaustive.
+
+
+
+1
+2
+3
+
+
+XCTAssertThrowsError(try login(email: "", password: "")) { error in
+    XCTAssertEqual(error as? LoginError, .invalidCredentials)
+}
+
+
+'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://sametkoyuncu.github.io/swift-notes/notes/"},{"@type":"ListItem","position":2,"name":"","item":"https://sametkoyuncu.github.io/swift-notes/notes/items/error-handling/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"","name":"","description":"Error Handling in Swift (with version cues) Practical patterns for throwing, typed throws, and interop.\nVersion Quick Reference Swift 5.x: untyped throws, rethrows, Result, try?, try!. Swift 6+: typed throws (throws(SomeError)) available by default; strict concurrency checking may surface error-sendability issues. Basics Use throws for recoverable issues; keep errors small and domain-specific. Prefer enums conforming to Error; include minimal context (payloads or userInfo when bridging). 1 2 3 4 5 6 enum NetworkError: Error { case offline, timeout(seconds: Int) } func fetch() throws -\u0026gt; Data { guard isOnline else { throw NetworkError.offline } return Data() } Typed Throws (Swift 6+) Specify the exact error type to enable exhaustive handling at call sites. 1 2 3 4 5 6 7 8 9 10 11 enum LoginError: Error { case offline, invalidCredentials } func login(email: String, password: String) throws(LoginError) -\u0026gt; Session { ... } do { _ = try login(email: \u0026#34;a@b.com\u0026#34;, password: \u0026#34;pw\u0026#34;) } catch LoginError.offline { // precise recovery } catch { // optional fallback if bridging from ObjC or unexpected errors arise } Rethrows Use rethrows when a function only throws if its function parameter throws—helpful for higher-order functions. 1 2 3 func mapOrThrow\u0026lt;T\u0026gt;(_ values: [String], transform: (String) throws -\u0026gt; T) rethrows -\u0026gt; [T] { try values.map(transform) } Result vs throws throws is ergonomic inside async/await and linear code. Result is useful for storing or combining errors, or when API shape must be synchronous but errorful. 1 let outcome: Result\u0026lt;Data, NetworkError\u0026gt; = Result { try fetch() } Async Error Propagation async throws pairs naturally; prefer this over callback-based completion handlers. For cancellation, treat CancellationError distinctly to avoid masking user intent. 1 2 3 4 5 6 7 func loadProfile() async throws -\u0026gt; Profile { ... } do { _ = try await loadProfile() } catch is CancellationError { // respect user cancellation } Bridging and Interop Objective-C NSError maps to Swift Error; annotate ObjC with NS_SWIFT_NAME and NSError ** patterns. When exposing Swift APIs to ObjC, typed throws are not visible; design ObjC-friendly overloads if needed. Testing Errors Use XCTAssertThrowsError with pattern matching to assert specific cases. For typed throws, tests become clearer and more exhaustive. 1 2 3 XCTAssertThrowsError(try login(email: \u0026#34;\u0026#34;, password: \u0026#34;\u0026#34;)) { error in XCTAssertEqual(error as? LoginError, .invalidCredentials) } ","keywords":[],"articleBody":"Error Handling in Swift (with version cues) Practical patterns for throwing, typed throws, and interop.\nVersion Quick Reference Swift 5.x: untyped throws, rethrows, Result, try?, try!. Swift 6+: typed throws (throws(SomeError)) available by default; strict concurrency checking may surface error-sendability issues. Basics Use throws for recoverable issues; keep errors small and domain-specific. Prefer enums conforming to Error; include minimal context (payloads or userInfo when bridging). 1 2 3 4 5 6 enum NetworkError: Error { case offline, timeout(seconds: Int) } func fetch() throws -\u003e Data { guard isOnline else { throw NetworkError.offline } return Data() } Typed Throws (Swift 6+) Specify the exact error type to enable exhaustive handling at call sites. 1 2 3 4 5 6 7 8 9 10 11 enum LoginError: Error { case offline, invalidCredentials } func login(email: String, password: String) throws(LoginError) -\u003e Session { ... } do { _ = try login(email: \"a@b.com\", password: \"pw\") } catch LoginError.offline { // precise recovery } catch { // optional fallback if bridging from ObjC or unexpected errors arise } Rethrows Use rethrows when a function only throws if its function parameter throws—helpful for higher-order functions. 1 2 3 func mapOrThrow\u003cT\u003e(_ values: [String], transform: (String) throws -\u003e T) rethrows -\u003e [T] { try values.map(transform) } Result vs throws throws is ergonomic inside async/await and linear code. Result is useful for storing or combining errors, or when API shape must be synchronous but errorful. 1 let outcome: Result\u003cData, NetworkError\u003e = Result { try fetch() } Async Error Propagation async throws pairs naturally; prefer this over callback-based completion handlers. For cancellation, treat CancellationError distinctly to avoid masking user intent. 1 2 3 4 5 6 7 func loadProfile() async throws -\u003e Profile { ... } do { _ = try await loadProfile() } catch is CancellationError { // respect user cancellation } Bridging and Interop Objective-C NSError maps to Swift Error; annotate ObjC with NS_SWIFT_NAME and NSError ** patterns. When exposing Swift APIs to ObjC, typed throws are not visible; design ObjC-friendly overloads if needed. Testing Errors Use XCTAssertThrowsError with pattern matching to assert specific cases. For typed throws, tests become clearer and more exhaustive. 1 2 3 XCTAssertThrowsError(try login(email: \"\", password: \"\")) { error in XCTAssertEqual(error as? LoginError, .invalidCredentials) } ","wordCount":"372","inLanguage":"en","datePublished":"0001-01-01T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://sametkoyuncu.github.io/swift-notes/notes/items/error-handling/"},"publisher":{"@type":"Organization","name":"Swift Notes","logo":{"@type":"ImageObject","url":"https://sametkoyuncu.github.io/swift-notes/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://sametkoyuncu.github.io/swift-notes/ accesskey=h title="Swift Notes (Alt + H)">Swift Notes</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://sametkoyuncu.github.io/notes/ title=Notes><span>Notes</span></a></li><li><a href=https://sametkoyuncu.github.io/cheat-sheets/ title="Cheat Sheets"><span>Cheat Sheets</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://sametkoyuncu.github.io/swift-notes/>Home</a>&nbsp;»&nbsp;<a href=https://sametkoyuncu.github.io/swift-notes/notes/>Notes</a></div><h1 class="post-title entry-hint-parent"></h1><div class=post-meta><span>2 min</span></div></header><div class=post-content><h1 id=error-handling-in-swift-with-version-cues>Error Handling in Swift (with version cues)<a hidden class=anchor aria-hidden=true href=#error-handling-in-swift-with-version-cues>#</a></h1><p>Practical patterns for throwing, typed throws, and interop.</p><h2 id=version-quick-reference>Version Quick Reference<a hidden class=anchor aria-hidden=true href=#version-quick-reference>#</a></h2><ul><li>Swift 5.x: untyped <code>throws</code>, <code>rethrows</code>, <code>Result</code>, <code>try?</code>, <code>try!</code>.</li><li>Swift 6+: typed throws (<code>throws(SomeError)</code>) available by default; strict concurrency checking may surface error-sendability issues.</li></ul><h2 id=basics>Basics<a hidden class=anchor aria-hidden=true href=#basics>#</a></h2><ul><li>Use <code>throws</code> for recoverable issues; keep errors small and domain-specific.</li><li>Prefer enums conforming to <code>Error</code>; include minimal context (payloads or <code>userInfo</code> when bridging).</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>enum</span> <span class=nc>NetworkError</span><span class=p>:</span> <span class=n>Error</span> <span class=p>{</span> <span class=k>case</span> <span class=n>offline</span><span class=p>,</span> <span class=n>timeout</span><span class=p>(</span><span class=n>seconds</span><span class=p>:</span> <span class=nb>Int</span><span class=p>)</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>fetch</span><span class=p>()</span> <span class=kr>throws</span> <span class=p>-&gt;</span> <span class=n>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>guard</span> <span class=n>isOnline</span> <span class=k>else</span> <span class=p>{</span> <span class=k>throw</span> <span class=n>NetworkError</span><span class=p>.</span><span class=n>offline</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>Data</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=typed-throws-swift-6>Typed Throws (Swift 6+)<a hidden class=anchor aria-hidden=true href=#typed-throws-swift-6>#</a></h2><ul><li>Specify the exact error type to enable exhaustive handling at call sites.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>enum</span> <span class=nc>LoginError</span><span class=p>:</span> <span class=n>Error</span> <span class=p>{</span> <span class=k>case</span> <span class=n>offline</span><span class=p>,</span> <span class=n>invalidCredentials</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>login</span><span class=p>(</span><span class=n>email</span><span class=p>:</span> <span class=nb>String</span><span class=p>,</span> <span class=n>password</span><span class=p>:</span> <span class=nb>String</span><span class=p>)</span> <span class=kr>throws</span><span class=p>(</span><span class=n>LoginError</span><span class=p>)</span> <span class=p>-&gt;</span> <span class=n>Session</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kc>_</span> <span class=p>=</span> <span class=k>try</span> <span class=n>login</span><span class=p>(</span><span class=n>email</span><span class=p>:</span> <span class=s>&#34;a@b.com&#34;</span><span class=p>,</span> <span class=n>password</span><span class=p>:</span> <span class=s>&#34;pw&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>catch</span> <span class=n>LoginError</span><span class=p>.</span><span class=n>offline</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// precise recovery</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>catch</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// optional fallback if bridging from ObjC or unexpected errors arise</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=rethrows>Rethrows<a hidden class=anchor aria-hidden=true href=#rethrows>#</a></h2><ul><li>Use <code>rethrows</code> when a function only throws if its function parameter throws—helpful for higher-order functions.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>func</span> <span class=nf>mapOrThrow</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;(</span><span class=kc>_</span> <span class=n>values</span><span class=p>:</span> <span class=p>[</span><span class=nb>String</span><span class=p>],</span> <span class=n>transform</span><span class=p>:</span> <span class=p>(</span><span class=nb>String</span><span class=p>)</span> <span class=kr>throws</span> <span class=p>-&gt;</span> <span class=n>T</span><span class=p>)</span> <span class=kr>rethrows</span> <span class=p>-&gt;</span> <span class=p>[</span><span class=n>T</span><span class=p>]</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span> <span class=n>values</span><span class=p>.</span><span class=bp>map</span><span class=p>(</span><span class=n>transform</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=result-vs-throws><code>Result</code> vs <code>throws</code><a hidden class=anchor aria-hidden=true href=#result-vs-throws>#</a></h2><ul><li><code>throws</code> is ergonomic inside async/await and linear code.</li><li><code>Result</code> is useful for storing or combining errors, or when API shape must be synchronous but errorful.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>let</span> <span class=nv>outcome</span><span class=p>:</span> <span class=n>Result</span><span class=p>&lt;</span><span class=n>Data</span><span class=p>,</span> <span class=n>NetworkError</span><span class=p>&gt;</span> <span class=p>=</span> <span class=n>Result</span> <span class=p>{</span> <span class=k>try</span> <span class=n>fetch</span><span class=p>()</span> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=async-error-propagation>Async Error Propagation<a hidden class=anchor aria-hidden=true href=#async-error-propagation>#</a></h2><ul><li><code>async throws</code> pairs naturally; prefer this over callback-based completion handlers.</li><li>For cancellation, treat <code>CancellationError</code> distinctly to avoid masking user intent.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>func</span> <span class=nf>loadProfile</span><span class=p>()</span> <span class=n>async</span> <span class=kr>throws</span> <span class=p>-&gt;</span> <span class=n>Profile</span> <span class=p>{</span> <span class=p>...</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>do</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kc>_</span> <span class=p>=</span> <span class=k>try</span> <span class=n>await</span> <span class=n>loadProfile</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>catch</span> <span class=k>is</span> <span class=n>CancellationError</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// respect user cancellation</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=bridging-and-interop>Bridging and Interop<a hidden class=anchor aria-hidden=true href=#bridging-and-interop>#</a></h2><ul><li>Objective-C <code>NSError</code> maps to Swift <code>Error</code>; annotate ObjC with <code>NS_SWIFT_NAME</code> and <code>NSError **</code> patterns.</li><li>When exposing Swift APIs to ObjC, typed throws are not visible; design ObjC-friendly overloads if needed.</li></ul><h2 id=testing-errors>Testing Errors<a hidden class=anchor aria-hidden=true href=#testing-errors>#</a></h2><ul><li>Use <code>XCTAssertThrowsError</code> with pattern matching to assert specific cases.</li><li>For typed throws, tests become clearer and more exhaustive.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=n>XCTAssertThrowsError</span><span class=p>(</span><span class=k>try</span> <span class=n>login</span><span class=p>(</span><span class=n>email</span><span class=p>:</span> <span class=s>&#34;&#34;</span><span class=p>,</span> <span class=n>password</span><span class=p>:</span> <span class=s>&#34;&#34;</span><span class=p>))</span> <span class=p>{</span> <span class=n>error</span> <span class=k>in</span>
+</span></span><span class=line><span class=cl>    <span class=n>XCTAssertEqual</span><span class=p>(</span><span class=n>error</span> <span class=k>as</span><span class=p>?</span> <span class=n>LoginError</span><span class=p>,</span> <span class=p>.</span><span class=n>invalidCredentials</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://sametkoyuncu.github.io/swift-notes/notes/items/dictionary/><span class=title>« Prev</span><br><span></span>
+</a><a class=next href=https://sametkoyuncu.github.io/swift-notes/notes/items/generics-and-constraints/><span class=title>Next »</span><br><span></span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://sametkoyuncu.github.io/swift-notes/>Swift Notes</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
