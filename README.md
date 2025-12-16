@@ -2,6 +2,17 @@
 
 My Swift journey..
 
+## ℹ️ About
+
+Personal Swift notes and snippets I use to learn and quickly refresh topics. Covers language features, SwiftUI, concurrency, error handling, storage options, and utility code in one place for fast reference.
+
+## 📂 Directories
+
+- `cheat-sheets/`: Quick reference sheets; includes a template and backlog.
+- `notes/`: Topic-based detailed notes plus an old Swift Book draft.
+- `sources/`: Example Swift code, extensions, and a Playground file.
+- `images/`: Visual assets (e.g., programmatic UI example).
+
 ## 📘 Table of Contents
 
 ### Cheat Sheets
