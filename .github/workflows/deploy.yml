@@ -22,6 +22,11 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21.x"
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
@@ -38,7 +43,7 @@ jobs:
           restore-keys: ${{ runner.os }}-hugomod-
 
       - name: Install theme modules
-        run: hugo mod get ./...
+        run: hugo mod tidy
         working-directory: site
 
       - name: Build site
