@@ -22,6 +22,7 @@ and utility code for fast reference. Browse the rendered site on GitHub Pages:
 Short, high-signal references designed for quick recall.
 
 - Dispatch -> [cheat-sheets/dispatch.md](cheat-sheets/dispatch.md)
+- SwiftUI View Identity & Lifetime -> [cheat-sheets/swiftui-view-identity-and-lifetime.md](cheat-sheets/swiftui-view-identity-and-lifetime.md)
 - some vs any (Opaque vs Existential) -> [cheat-sheets/some-vs-any.md](cheat-sheets/some-vs-any.md)
 - Cheat sheet format & template -> [cheat-sheets/README.md](cheat-sheets/README.md)
 
